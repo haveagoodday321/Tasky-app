@@ -191,7 +191,12 @@ li{
 </div>
 </div>
 
-<script>function subscribe() {
+<script>document.getElementById("notes").value =
+  localStorage.getItem("notes") || "";
+
+document.getElementById("notes").addEventListener("input", e=>{
+  localStorage.setItem("notes", e.target.value);
+});function subscribe() {
   alert("Subscription system coming soon! (You’ll connect payments later)");
 }
 let tasks=JSON.parse(localStorage.getItem("tasks")||"[]");
