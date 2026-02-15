@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Tasky – Your Personal Assistant</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="manifest" href="manifest.json">
+
+<style>
+/* Root colors */
+:root{
+  --primary:#6366f1;
+  --secondary:#8b5cf6;
+  --accent:#22c55e;
+  --gold:#f59e0b;
+  --bg:#0f172a;
+  --card:#ffffff;
+}
+
+/* Body */
+body{
+  font-family: system-ui;
+  margin:0;
+  background: linear-gradient(180deg,#1e293b,#0f172a);
+  color:white;
+}
+
+/* Container */
+.container{
+  max-width:480px;
+  margin:auto;
+  padding:18px;
+}
+
+/* Headings */
+h1{
+  background:linear-gradient(90deg,#a5b4fc,#c084fc);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+/* Cards */
+.card{
+  background: var(--card);
+  color: black;
+  padding:16px;
+  border-radius:16px;
+  margin-top:16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Inputs & Selects */
+input, select, textarea{
+  width:100%;
+  padding:10px;
+  margin-top:8px;
+  border-radius:10px;
+  border:1px solid #ddd;
+  box-sizing: border-box; /* Fixes overflow inside cards */
+}
+
+/* Buttons */
+button{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+}
+
+button.secondary{
+  background:#e5e7eb;
+  color:black;
+}
+
+/* Section Tabs */
+#sectionTabs button {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  padding: 6px;
+}
+
+/* Badges */
+.badge{
+  background:var(--accent);
+  color:white;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:12px;
+}
+
+.premium-badge{
+  background:linear-gradient(135deg,#fbbf24,#f59e0b);
+}
+
+/* Locked content */
+.locked{
+  filter:blur(4px);
+  opacity:.5;
+}
+
+/* Task list items */
+#taskList {
+  padding-left: 0;
+  margin-top: 8px;
+  list-style: none;
+}
+
+li{
+  display:flex;
+  justify-content:space-between;
+  margin:6px 0;
+}
+
+.done{
+  text-decoration:line-through;
+  opacity:.6;
+}
+
+.gold{
+  color:var(--gold);
+  font-weight:700;
+}
+
+/* Calendar */
+.calendar{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:4px;
+  text-align:center;
+  font-size:12px;
+}
+
+.day{
+  padding:6px;
+  background:#e5e7eb;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.today{
+  background:linear-gradient(135deg,#6366f1,#8b5cf6);
+  color:white;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>Tasky</h1>
+
+<!-- Quick Notes -->
+<div class="card">
+  <h3>Quick Notes</h3>
+  <textarea id="notes" placeholder="Write notes here..." style="height:80px;"></textarea>
+</div>
+
+<!-- Task Section -->
+<div class="card">
+  <h3>Add Task</h3>
+  <input id="taskInput" placeholder="Task"/>
+  <input type="date" id="deadline"/>
+  <select id="priority">
+    <option>Low</option>
+    <option>Medium</option>
+    <option>High</option>
+  </select>
+  <select id="sectionSelect">
+    <option>General</option>
+    <option>School</option>
+    <option>Work</option>
+    <option>Study Notes</option>
+    <option>Personal</option>
+  </select>
+  <button onclick="addTask()">Add</button>
+
+  <!-- Section Tabs & Notes will be inserted dynamically -->
+
+  <ul id="taskList"></ul>
+  <p>Streak: <span id="streak">0</span> 🔥</p>
+  <button class="secondary" onclick="clearCompleted()">Clear Completed Tasks</button>
+</div>
+
+<!-- Mini Calendar -->
+<div class="card">
+  <h3>Mini Calendar</h3>
+  <div class="calendar" id="calendar"></div>
+</div>
+
+<!-- Premium Section -->
+<div class="card premium-card">
+  <span class="badge premium-badge">Premium</span>
+  <h3>Tasky Premium</h3>
+  <p class="soft">$0.98 / month</p>
+  <button onclick="subscribe()">Subscribe Monthly</button>
+</div>
+
+<div class="card">
+  <span class="badge premium-badge">Premium Rewards</span>
+  <div id="premiumLocked" class="locked">
+    <p>🎁 XP points & levels</p>
+    <p>🤖 Smart AI scheduling</p>
+    <p>🔔 Auto reminders</p>
+    <p>📊 Productivity insights</p>
+  </div>
+  <button onclick="unlockPremium()">Try Premium</button>
+</div>
+
+</div> <!-- container -->
+
+<script>
+// --- Notes ---
+document.getElementById("notes").value = localStorage.getItem("notes") || "";
+document.getElementById("notes").addEventListener("input", e => {
+  localStorage.setItem("notes", e.target.value);
+});
+
+// --- Subscription placeholder ---
+function subscribe(){ alert("Subscription system coming soon!"); }
+
+// --- Tasks & Streak ---
+let tasks = JSON.parse(localStorage.getItem("tasks")||"[]");
+let streak = Number(localStorage.getItem("streak")) || 0;
+let lastComplete = localStorage.getItem("lastComplete") || 0;
+let premiumUntil = localStorage.getItem("premiumUntil") || 0;
+let currentSection = "General"; // default
+
+document.getElementById("streak").textContent = streak;
+
+function saveTasks() { localStorage.setItem("tasks", JSON.stringify(tasks)); }
+
+// --- Add Task ---
+function addTask() {
+  const input = document.getElementById("taskInput");
+  const section = document.getElementById("sectionSelect").value;
+  const priority = document.getElementById("priority").value;
+  if(!input.value) return;
+
+  tasks.push({ text:`[${section}] ${input.value}`, done:false, priority });
+  input.value = "";
+  renderTasks();
+  saveTasks();
+  updateStreak();
+}
+
+// --- Toggle Task ---
+function toggleTask(i){
+  tasks[i].done = !tasks[i].done;
+  saveTasks();
+  renderTasks();
+  updateStreak();
+}
+
+// --- Render Tasks ---
+function renderTasks(){
+  const ul = document.getElementById("taskList");
+  ul.innerHTML = "";
+  tasks
+    .filter(t => t.text.startsWith(`[${currentSection}]`))
+    .forEach((t,i)=>{
+      const li = document.createElement("li");
+      let color = t.priority==="High"?"red":t.priority==="Medium"?"orange":"green";
+      li.innerHTML = `<span class="${t.done?'done':''}">${t.text} <small style="color:${color}">(${t.priority})</small></span>
+                      <button onclick="toggleTask(${tasks.indexOf(t)})">✓</button>`;
+      ul.appendChild(li);
+    });
+}
+
+// --- Clear Completed ---
+function clearCompleted(){
+  tasks = tasks.filter(t=>!t.done);
+  renderTasks();
+  saveTasks();
+}
+
+// --- Streak & Rewards ---
+function updateStreak(){
+  const today = new Date().toDateString();
+  if(lastComplete !== today){
+    streak++;
+    localStorage.setItem("streak", streak);
+    lastComplete = today;
+    localStorage.setItem("lastComplete", today);
+    document.getElementById("streak").textContent = streak;
+    checkRewards();
+  }
+}
+
+function checkRewards(){
+  if(streak===7) giveReward(3);
+  if(streak===14) giveReward(7);
+  if(streak===21) giveReward(14);
+}
+
+function giveReward(days){
+  const rewardTime = Date.now() + days*24*60*60*1000;
+  localStorage.setItem("premiumUntil", rewardTime);
+  alert(`🎁 Reward Unlocked! Premium for ${days} days!`);
+}
+
+function isPremiumActive(){
+  return Date.now() < localStorage.getItem("premiumUntil");
+}
+
+// --- Premium Unlock ---
+function unlockPremium(){
+  document.getElementById("premiumLocked").classList.remove("locked");
+  alert("✨ Premium trial unlocked!");
+}
+
+// --- Calendar ---
+function buildCalendar(){
+  const cal = document.getElementById("calendar");
+  const today = new Date().getDate();
+  for(let i=1;i<=30;i++){
+    const d = document.createElement("div");
+    d.className = "day";
+    d.textContent = i;
+    if(i===today) d.classList.add("today");
+    cal.appendChild(d);
+  }
+}
+
+// --- Service Worker ---
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("sw.js").then(()=>console.log("Service Worker Registered"));
+}
+
+// --- Personalized Sections & Notes ---
+const sections = ["General","School","Work","Study Notes","Personal"];
+const sectionTabsDiv = document.createElement("div");
+sectionTabsDiv.id = "sectionTabs";
+sectionTabsDiv.style.display = "flex";
+sectionTabsDiv.style.flexWrap = "wrap";
+sectionTabsDiv.style.justifyContent = "space-between";
+sectionTabsDiv.style.marginTop = "12px";
+
+sections.forEach(sec => {
+  const btn = document.createElement("button");
+  btn.textContent = sec;
+  btn.style.flex = "1";
+  btn.style.margin = "2px";
+  btn.onclick = () => showSection(sec);
+  sectionTabsDiv.appendChild(btn);
+});
+
+// Add tabs above task list
+const taskCard = document.getElementById("taskList").parentNode;
+taskCard.insertBefore(sectionTabsDiv, document.getElementById("taskList"));
+
+// Section notes storage
+let sectionNotes = JSON.parse(localStorage.getItem("sectionNotes")) || {};
+sections.forEach(sec => { if(!sectionNotes[sec]) sectionNotes[sec] = ""; });
+
+// Textarea for section notes in a wrapper
+const sectionNotesArea = document.createElement("textarea");
+sectionNotesArea.id = "sectionNotes";
+sectionNotesArea.style.width = "100%";
+sectionNotesArea.style.height = "80px";
+sectionNotesArea.style.marginTop = "8px";
+sectionNotesArea.placeholder = "Write notes for this section...";
+
+const sectionNotesContainer = document.createElement("div");
+sectionNotesContainer.style.marginTop = "8px";
+sectionNotesContainer.appendChild(sectionNotesArea);
+taskCard.appendChild(sectionNotesContainer);
+
+function showSection(sec){
+  currentSection = sec;
+  renderTasks();
+  sectionNotesArea.value = sectionNotes[sec];
+}
+
+// Save section notes
+sectionNotesArea.addEventListener("input", e=>{
+  sectionNotes[currentSection] = e.target.value;
+  localStorage.setItem("sectionNotes", JSON.stringify(sectionNotes));
+});
+
+// --- Initialize ---
+renderTasks();
+buildCalendar();
+updateStreak();
+</script>
+</body>
+  </html>
