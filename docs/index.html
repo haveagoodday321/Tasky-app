@@ -1,372 +1,266 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8"/>
 <title>Tasky – Your Personal Assistant</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
 <style>
-:root {
-  --primary: #4f46e5;
-  --secondary: #6366f1;
-  --accent: #22c55e;
-  --soft-bg: #f4f6ff;
-  --highlight: #fef3c7;
-  --text-main: #0f172a;
-  --text-soft: #64748b;
+:root{
+  --primary:#6366f1;
+  --secondary:#8b5cf6;
+  --accent:#22c55e;
+  --gold:#f59e0b;
+  --bg:#0f172a;
+  --card:#ffffff;
 }
 
-body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background: linear-gradient(180deg, #eef2ff, #f8fafc);
-  margin: 0;
-  color: var(--text-main);
+body{
+  font-family:system-ui;
+  margin:0;
+  background:linear-gradient(180deg,#1e293b,#0f172a);
+  color:white;
 }
 
-.container {
-  max-width: 480px;
-  margin: auto;
-  padding: 20px;
+.container{
+  max-width:480px;
+  margin:auto;
+  padding:18px;
 }
 
-h1 {
-  font-size: 30px;
-  margin-bottom: 4px;
-  background: linear-gradient(90deg, var(--primary), var(--secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+h1{
+  background:linear-gradient(90deg,#a5b4fc,#c084fc);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
 
-p {
-  color: var(--text-soft);
+.card{
+  background:var(--card);
+  color:black;
+  padding:16px;
+  border-radius:16px;
+  margin-top:16px;
 }
 
-.card {
-  background: white;
-  border-radius: 18px;
-  padding: 18px;
-  margin-top: 18px;
-  box-shadow: 0 12px 30px rgba(79,70,229,0.12);
-  border: 1px solid #eef2ff;
-  animation: slideUp 0.45s ease-out both;
+input,select{
+  width:100%;
+  padding:10px;
+  margin-top:8px;
+  border-radius:10px;
+  border:1px solid #ddd;
 }
 
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: translateY(0); }
+button{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  color:white;
+  font-weight:600;
 }
 
-input, select {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  font-size: 15px;
+.secondary{
+  background:#e5e7eb;
+  color:black;
 }
 
-button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 12px;
-  border-radius: 14px;
-  font-size: 15px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  color: white;
-  transition: transform 0.15s ease;
+.badge{
+  background:var(--accent);
+  color:white;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:12px;
 }
 
-button:active {
-  transform: scale(0.97);
+.premium-badge{
+  background:linear-gradient(135deg,#fbbf24,#f59e0b);
 }
 
-button.secondary {
-  background: var(--soft-bg);
-  color: var(--primary);
+.locked{
+  filter:blur(4px);
+  opacity:.5;
 }
 
-ul {
-  padding-left: 18px;
+li{
+  display:flex;
+  justify-content:space-between;
+  margin:6px 0;
 }
 
-li {
-  margin-bottom: 6px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  animation: popIn 0.25s ease-out;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+.done{
+  text-decoration:line-through;
+  opacity:.6;
 }
 
-@keyframes popIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+.gold{
+  color:var(--gold);
+  font-weight:700;
 }
 
-li.done {
-  text-decoration: line-through;
-  color: #94a3b8;
-  animation: complete 0.3s ease-out;
+.calendar{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:4px;
+  text-align:center;
+  font-size:12px;
 }
 
-@keyframes complete {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
-}
-
-li.swipe-left {
-  transform: translateX(-80px);
-  opacity: 0;
-}
-
-.soft {
-  font-size: 14px;
-  color: var(--text-soft);
-}
-
-.badge {
-  background: linear-gradient(135deg, var(--accent), #16a34a);
-  color: white;
-  padding: 5px 12px;
-  border-radius: 999px;
-  font-size: 12px;
-  display: inline-block;
-  margin-bottom: 8px;
-}
-
-.locked {
-  opacity: 0.45;
-  filter: blur(1.5px);
-}
-
-.highlight {
-  background: var(--highlight);
-  border-left: 4px solid #f59e0b;
-  padding: 12px;
-  border-radius: 12px;
-  margin-top: 12px;
-  font-size: 14px;
-}
-
-.momentum-box {
-  margin-top: 12px;
-  padding: 10px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #ecfeff, #eef2ff);
-  font-weight: 600;
-  color: var(--primary);
-}
-
-.premium-card {
-  background: linear-gradient(180deg, #f5f3ff, #ffffff);
-  border: 1px solid #c7d2fe;
-}
-
-.task-btn {
-  background: transparent;
-  color: #ef4444;
-  border: none;
-  font-weight: 700;
-  cursor: pointer;
-  margin-left: 8px;
+.day{
+  padding:6px;
+  background:#e5e7eb;
+  border-radius:6px;
 }
 </style>
 </head>
 
 <body>
+
 <div class="container">
-
 <h1>Tasky</h1>
-<p>Your calm assistant for school, work & life.</p>
-
-<!-- Setup -->
-<div class="card" id="setup">
-  <h3>Let’s personalize Tasky</h3>
-
-  <select>
-    <option>Student</option>
-    <option>Employee</option>
-    <option>Both</option>
-  </select>
-
-  <select>
-    <option>Gentle reminders</option>
-    <option>Normal reminders</option>
-    <option>Minimal interruptions</option>
-  </select>
-
-  <button onclick="start()">Start using Tasky</button>
-</div>
-
-<!-- App -->
-<div id="app" style="display:none">
 
 <div class="card">
-  <h3>Today’s Objectives</h3>
-  <p class="soft">This is part of Tasky Basic — free forever.</p>
+<span class="badge">Free</span>
+<h3>Add Task</h3>
 
-  <input id="taskInput" placeholder="Add an objective…" />
-  <button onclick="addTask()">Add objective</button>
-  <button class="secondary" onclick="clearCompleted()">Clear Completed Tasks</button>
+<input id="taskInput" placeholder="Task"/>
+<input type="date" id="deadline"/>
+<select id="priority">
+<option>Low</option>
+<option>Medium</option>
+<option>High</option>
+</select>
 
-  <ul id="taskList"></ul>
+<button onclick="addTask()">Add</button>
 
-  <div class="momentum-box">
-    Momentum: <span id="momentum">0</span> completed
-  </div>
+<ul id="taskList"></ul>
+
+<p>Streak: <span id="streak">0</span> 🔥</p>
 </div>
 
 <div class="card">
-  <span class="badge">Free</span>
-  <h3>Tasky Basic</h3>
-  <p class="soft">Everything you need to stay organised — forever.</p>
+<h3>Mini Calendar</h3>
+<div class="calendar" id="calendar"></div>
 </div>
 
 <div class="card">
-  <span class="badge">Optional</span>
-  <h3>Advanced Assistant</h3>
+<span class="badge premium-badge">Premium</span>
+<h3>Premium Rewards</h3>
 
-  <div id="aiLocked" class="locked">
-    <p>📘 Personalised plans</p>
-    <p>⏱️ Smart timing suggestions</p>
-    <p>🧠 Focus methods tailored to you</p>
-  </div>
-
-  <button class="secondary" onclick="startTrial()">Start free trial</button>
+<div id="premiumLocked" class="locked">
+<p>🎁 XP points & levels</p>
+<p>🤖 Smart AI scheduling</p>
+<p>🔔 Auto reminders</p>
+<p>📊 Productivity insights</p>
 </div>
 
-<div class="card premium-card">
-  <h3>Tasky Premium</h3>
-  <p class="soft">$0.98 / month</p>
-</div>
-
+<button onclick="unlockPremium()">Try Premium</button>
 </div>
 </div>
 
 <script>
-let momentum = 0;
+let tasks=JSON.parse(localStorage.getItem("tasks")||"[]");
+let streak=localStorage.getItem("streak")||0;
 
-// Load tasks from localStorage on start
-window.addEventListener("DOMContentLoaded", () => {
-  const saved = JSON.parse(localStorage.getItem("tasks") || "[]");
-  saved.forEach(t => renderTask(t.text, t.done));
-  updateMomentum();
-});
+document.getElementById("streak").textContent=streak;
 
-function start() {
-  document.getElementById("setup").style.display = "none";
-  document.getElementById("app").style.display = "block";
+function save(){
+  localStorage.setItem("tasks",JSON.stringify(tasks));
 }
 
-function saveTasks() {
-  const taskList = [];
-  document.querySelectorAll("#taskList li").forEach(li => {
-    taskList.push({ text: li.querySelector(".task-text").textContent, done: li.classList.contains("done") });
-  });
-  localStorage.setItem("tasks", JSON.stringify(taskList));
-  updateMomentum();
+function requestNotify(){
+  if(Notification.permission!=="granted"){
+    Notification.requestPermission();
+  }
 }
 
-function updateMomentum() {
-  const doneCount = document.querySelectorAll("#taskList li.done").length;
-  document.getElementById("momentum").textContent = doneCount;
+function notify(text){
+  if(Notification.permission==="granted"){
+    new Notification("Tasky Reminder",{body:text});
+  }
 }
 
-function addTask() {
-  const input = document.getElementById("taskInput");
-  if (!input.value) return;
-  renderTask(input.value, false);
-  input.value = "";
-  saveTasks();
-}
+function addTask(){
+  const text=taskInput.value;
+  if(!text)return;
 
-function renderTask(text, done) {
-  const li = document.createElement("li");
-
-  const span = document.createElement("span");
-  span.className = "task-text";
-  span.textContent = text;
-  if (done) li.classList.add("done");
-
-  // Editable task
-  span.addEventListener("dblclick", () => editTask(span));
-  span.addEventListener("touchstart", e => {
-    e.stopPropagation();
-    span.dataset.touchTime = Date.now();
-  });
-  span.addEventListener("touchend", e => {
-    const touchTime = parseInt(span.dataset.touchTime);
-    if (Date.now() - touchTime > 300) editTask(span);
-  });
-
-  const btnDelete = document.createElement("button");
-  btnDelete.className = "task-btn";
-  btnDelete.textContent = "❌";
-  btnDelete.onclick = () => {
-    li.remove();
-    saveTasks();
+  const task={
+    text,
+    deadline:deadline.value,
+    priority:priority.value,
+    done:false
   };
 
-  li.appendChild(span);
-  li.appendChild(btnDelete);
+  tasks.push(task);
+  save();
+  render();
+  notify("Task added: "+text);
+  taskInput.value="";
+}
 
-  // Click to toggle done
-  li.onclick = e => {
-    if (e.target === btnDelete || e.target === span) return;
-    li.classList.toggle("done");
-    saveTasks();
-  };
+function toggle(i){
+  tasks[i].done=!tasks[i].done;
 
-  // Swipe gestures
-  let startX = 0;
-  li.addEventListener("touchstart", e => startX = e.touches[0].clientX);
-  li.addEventListener("touchend", e => {
-    const diff = e.changedTouches[0].clientX - startX;
-    if (diff > 80) li.classList.add("done");
-    if (diff < -80) li.remove();
-    saveTasks();
+  if(tasks[i].done){
+    streak++;
+    localStorage.setItem("streak",streak);
+    document.getElementById("streak").textContent=streak;
+
+    if(streak%5===0){
+      alert("🏆 Reward unlocked! Keep going!");
+    }
+  }
+
+  save();
+  render();
+}
+
+function render(){
+  const ul=document.getElementById("taskList");
+  ul.innerHTML="";
+
+  tasks.forEach((t,i)=>{
+    const li=document.createElement("li");
+
+    let color=
+      t.priority==="High"?"red":
+      t.priority==="Medium"?"orange":"green";
+
+    li.innerHTML=`
+    <span class="${t.done?'done':''}">
+    ${t.text} 
+    <small style="color:${color}">
+    (${t.priority})
+    </small>
+    </span>
+    <button onclick="toggle(${i})">✓</button>
+    `;
+
+    ul.appendChild(li);
   });
-
-  document.getElementById("taskList").appendChild(li);
 }
 
-// Edit functions
-function editTask(span) {
-  const oldText = span.textContent;
-  const input = document.createElement("input");
-  input.type = "text";
-  input.value = oldText;
-  input.style.width = "70%";
-
-  span.replaceWith(input);
-  input.focus();
-
-  input.addEventListener("blur", () => finishEdit(input, span));
-  input.addEventListener("keydown", e => { if (e.key === "Enter") finishEdit(input, span); });
+function buildCalendar(){
+  const cal=document.getElementById("calendar");
+  for(let i=1;i<=30;i++){
+    const d=document.createElement("div");
+    d.className="day";
+    d.textContent=i;
+    cal.appendChild(d);
+  }
 }
 
-function finishEdit(input, span) {
-  span.textContent = input.value || "Untitled Task";
-  input.replaceWith(span);
-  saveTasks();
+function unlockPremium(){
+  document.getElementById("premiumLocked")
+  .classList.remove("locked");
+  alert("✨ Premium trial unlocked!");
 }
 
-// Clear completed tasks
-function clearCompleted() {
-  document.querySelectorAll("#taskList li.done").forEach(li => {
-    li.remove();
-  });
-  saveTasks();
-}
-
-function startTrial() {
-  document.getElementById("aiLocked").classList.remove("locked");
-  alert("🎉 Free trial activated!");
-}
+requestNotify();
+render();
+buildCalendar();
 </script>
+
 </body>
   </html>
