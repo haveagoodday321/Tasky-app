@@ -275,7 +275,40 @@ requestNotify();
 render();
 buildCalendar();
 </script>
-<script>
+<script>let streak = Number(localStorage.getItem("streak")) || 0;
+let lastComplete = localStorage.getItem("lastComplete") || 0;
+let premiumUntil = localStorage.getItem("premiumUntil") || 0;
+
+function updateStreak() {
+  const today = new Date().toDateString();
+
+  if (lastComplete !== today) {
+    streak++;
+    localStorage.setItem("streak", streak);
+    localStorage.setItem("lastComplete", today);
+  }
+
+  checkRewards();
+}
+
+function checkRewards() {
+  if (streak === 7) giveReward(3);
+  if (streak === 14) giveReward(7);
+  if (streak === 21) giveReward(14);
+}
+
+function giveReward(days) {
+  const now = Date.now();
+  const rewardTime = now + days*24*60*60*1000;
+
+  localStorage.setItem("premiumUntil", rewardTime);
+
+  alert("🎁 Reward Unlocked!\nPremium for "+days+" days!");
+}
+
+function isPremiumActive() {
+  return Date.now() < premiumUntil;
+}
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("sw.js");
 }if ("serviceWorker" in navigator) {
