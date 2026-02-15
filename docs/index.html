@@ -275,7 +275,17 @@ requestNotify();
 render();
 buildCalendar();
 </script>
-<script>let streak = Number(localStorage.getItem("streak")) || 0;
+<script>function highlightToday() {
+  const today = new Date().getDate();
+
+  document.querySelectorAll(".calendar-day").forEach(day => {
+    if (parseInt(day.textContent) === today) {
+      day.classList.add("today");
+    }
+  });
+}
+
+highlightToday();let streak = Number(localStorage.getItem("streak")) || 0;
 let lastComplete = localStorage.getItem("lastComplete") || 0;
 let premiumUntil = localStorage.getItem("premiumUntil") || 0;
 
