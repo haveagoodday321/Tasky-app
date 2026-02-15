@@ -220,23 +220,16 @@ function notify(text){
   }
 }
 
-function addTask(){
-  const text=taskInput.value;
-  if(!text)return;
+function addTask() {
+  const input = document.getElementById("taskInput");
+  const section = document.getElementById("sectionSelect").value;
 
-  const task={
-    text,
-    deadline:deadline.value,
-    priority:priority.value,
-    done:false
-  };
+  if (!input.value) return;
 
-  tasks.push(task);
-  save();
-  render();
-  notify("Task added: "+text);
-  taskInput.value="";
-}
+  renderTask("["+section+"] "+input.value, false);
+  input.value = "";
+  saveTasks();
+                                        }
 
 function toggle(i){
   tasks[i].done=!tasks[i].done;
