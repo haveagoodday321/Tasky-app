@@ -336,7 +336,13 @@ function addTask() {
   const priority = document.getElementById("priority").value;
   if(!input.value) return;
 
-  tasks.push({ text:`[${section}] ${input.value}`, done:false, priority });
+  tasks.push({
+  text:`[${section}] ${input.value}`,
+  done:false,
+  priority,
+  xp:10,
+  date:new Date().toLocaleDateString()
+});
   input.value = "";
   renderTasks();
   saveTasks();
