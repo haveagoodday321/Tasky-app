@@ -235,6 +235,21 @@ async function subscribe() {
 <div class="card">
   <h3>Mini Calendar</h3>
   <div class="calendar" id="calendar"></div>
+</div><div class="card">
+<h3>Productivity Stats</h3>
+
+<p>Tasks Completed This Week:
+<span id="weekTasks">0</span></p>
+
+<p>Productivity:
+<span id="productivity">0%</span></p>
+
+<div style="background:#ddd;height:10px;border-radius:6px">
+<div id="progressBar"
+style="height:10px;background:#6366f1;width:0%;border-radius:6px">
+</div>
+</div>
+
 </div>
 
 <!-- Premium Section -->
@@ -434,8 +449,29 @@ sectionNotesArea.addEventListener("input", e=>{
 });
 
 // --- Initialize ---
+function updateStats(){
+
+const total=tasks.length;
+
+const done=tasks.filter(t=>t.done).length;
+
+let percent=0;
+
+if(total>0){
+percent=Math.round((done/total)*100);
+}
+
+document.getElementById("productivity").textContent=percent+"%";
+
+document.getElementById("progressBar").style.width=percent+"%";
+
+document.getElementById("weekTasks").textContent=done;
+
+  }
+requestNotify()
 render();
 buildCalendar();
+dailyMotivation();
 updateStats();
 dailyMotivation();
 updateStreak();
