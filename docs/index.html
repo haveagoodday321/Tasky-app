@@ -197,7 +197,21 @@ async function subscribe() {
     <option>Low</option>
     <option>Medium</option>
     <option>High</option>
-  </select>
+  </select><select id="category">
+<option>School</option>
+<option>Work</option>
+<option>Personal</option>
+<option>Gym</option>
+</select>
+
+<select id="repeat">
+<option value="none">No Repeat</option>
+<option value="daily">Daily</option>
+<option value="weekly">Weekly</option>
+<option value="monthly">Monthly</option>
+</select>
+
+<input type="time" id="time"/>
   <select id="sectionSelect">
     <option>General</option>
     <option>School</option>
@@ -210,7 +224,10 @@ async function subscribe() {
   <!-- Section Tabs & Notes will be inserted dynamically -->
 
   <ul id="taskList"></ul>
-  <p>Streak: <span id="streak">0</span> 🔥</p>
+  <p>Streak: <span id="streak">0</span> 🔥</p><p>XP: <span id="xp">0</span> ⭐</p>
+<p>Level: <span id="level">1</span> 🏆</p>
+
+<div id="motivation" style="margin-top:10px;font-style:italic;color:#555"></div>
   <button class="secondary" onclick="clearCompleted()">Clear Completed Tasks</button>
 </div>
 
@@ -253,7 +270,13 @@ function subscribe(){ alert("Subscription system coming soon!"); }
 
 // --- Tasks & Streak ---
 let tasks = JSON.parse(localStorage.getItem("tasks")||"[]");
-let streak = Number(localStorage.getItem("streak")) || 0;
+let streak = Number(localStorage.getItem("streak")) || 0;let xp=localStorage.getItem("xp")||0;
+let level=localStorage.getItem("level")||1;
+let weekTasks=localStorage.getItem("weekTasks")||0;
+
+document.getElementById("xp").textContent=xp;
+document.getElementById("level").textContent=level;
+document.getElementById("weekTasks").textContent=weekTasks;
 let lastComplete = localStorage.getItem("lastComplete") || 0;
 let premiumUntil = localStorage.getItem("premiumUntil") || 0;
 let currentSection = "General"; // default
@@ -411,8 +434,10 @@ sectionNotesArea.addEventListener("input", e=>{
 });
 
 // --- Initialize ---
-renderTasks();
+render();
 buildCalendar();
+updateStats();
+dailyMotivation();
 updateStreak();
 </script>
 </body>
