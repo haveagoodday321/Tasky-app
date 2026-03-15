@@ -291,7 +291,30 @@ function subscribe(){ alert("Subscription system coming soon!"); }
 
 // --- Tasks & Streak ---
 let tasks = JSON.parse(localStorage.getItem("tasks")||"[]");
-let streak = Number(localStorage.getItem("streak")) || 0;let xp=localStorage.getItem("xp")||0;
+let streak = Number(localStorage.getItem("streak")) || 0;<script>
+let tasks=JSON.parse(localStorage.getItem("tasks")||"[]");
+let streak=localStorage.getItem("streak")||0;
+
+const motivation=[
+"🔥 Progress is progress!",
+"💪 Discipline beats motivation.",
+"🚀 One task at a time.",
+"🏆 Future you will thank you.",
+"⚡ Small wins create big success."
+];
+
+function dailyMotivation(){
+const msg=motivation[Math.floor(Math.random()*motivation.length)];
+
+const div=document.createElement("div");
+div.style.marginTop="10px";
+div.style.fontStyle="italic";
+div.style.color="#666";
+
+div.textContent=msg;
+
+document.querySelector(".container").prepend(div);
+  }let xp=localStorage.getItem("xp")||0;
 let level=localStorage.getItem("level")||1;
 let weekTasks=localStorage.getItem("weekTasks")||0;
 
