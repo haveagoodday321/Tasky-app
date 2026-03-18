@@ -320,7 +320,7 @@ document.getElementById("xp").textContent=xp;
 document.getElementById("level").textContent=level;
 document.getElementById("weekTasks").textContent=weekTasks;
 let lastComplete = localStorage.getItem("lastComplete") || 0;
-let premiumUntil = localStorage.getItem("premiumUntil") || 0;
+let premiumUntil = Number(localStorage.getItem("premiumUntil")) || 0;
 let currentSection = "General"; // default
 
 document.getElementById("streak").textContent = streak;
