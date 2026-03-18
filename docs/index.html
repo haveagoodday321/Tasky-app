@@ -290,9 +290,8 @@ document.getElementById("notes").addEventListener("input", e => {
 
 // --- Tasks & Streak ---
 let tasks = JSON.parse(localStorage.getItem("tasks")||"[]");
+let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
 let streak = Number(localStorage.getItem("streak")) || 0;
-let tasks=JSON.parse(localStorage.getItem("tasks")||"[]");
-let streak=localStorage.getItem("streak")||0;
 
 const motivation=[
 "🔥 Progress is progress!",
@@ -502,12 +501,10 @@ document.getElementById("progressBar").style.width=percent+"%";
 document.getElementById("weekTasks").textContent=done;
 
   }
-requestNotify()
-render();
+renderTasks();
 buildCalendar();
 dailyMotivation();
 updateStats();
-dailyMotivation();
 updateStreak();
 </script>
 </body>
