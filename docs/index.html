@@ -289,8 +289,7 @@ document.getElementById("notes").addEventListener("input", e => {
 // --- Subscription placeholder ---
 
 // --- Tasks & Streak ---
-let tasks = JSON.parse(localStorage.getItem("tasks")||"[]");
-let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+  let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
 let streak = Number(localStorage.getItem("streak")) || 0;
 
 const motivation=[
@@ -312,9 +311,9 @@ div.style.color="#666";
 div.textContent=msg;
 
 document.querySelector(".container").prepend(div);
-  }let xp=localStorage.getItem("xp")||0;
-let level=localStorage.getItem("level")||1;
-let weekTasks=localStorage.getItem("weekTasks")||0;
+  }let xp=Number(localStorage.getItem("xp"))||0;
+let level = Number(localStorage.getItem("level")) || 1;
+let weekTasks = Number(localStorage.getItem("weekTasks")) || 0;
 
 document.getElementById("xp").textContent=xp;
 document.getElementById("level").textContent=level;
