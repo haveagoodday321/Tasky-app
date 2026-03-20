@@ -315,7 +315,23 @@ document.querySelector(".container").prepend(div);
 let level = Number(localStorage.getItem("level")) || 1;
 let weekTasks = Number(localStorage.getItem("weekTasks")) || 0;
 
-document.getElementById("xp").textContent=xp;
+document.getElementById("xp").textContent=xp;if(tasks[i].done){
+  xp += 10;
+  weekTasks++;}
+  
+  if(xp >= level * 100){
+    level++;
+    xp = 0;
+  }
+
+  localStorage.setItem("xp", xp);
+  localStorage.setItem("level", level);
+  localStorage.setItem("weekTasks", weekTasks);
+
+  document.getElementById("xp").textContent = xp;
+  document.getElementById("level").textContent = level;
+  document.getElementById("weekTasks").textContent = weekTasks;
+  }
 document.getElementById("level").textContent=level;
 document.getElementById("weekTasks").textContent=weekTasks;
 let lastComplete = localStorage.getItem("lastComplete") || 0;
