@@ -301,7 +301,9 @@ const motivation=[
 ];
 
 function dailyMotivation(){
-const msg=motivation[Math.floor(Math.random()*motivation.length)];
+  const msg = motivation[Math.floor(Math.random()*motivation.length)];
+  document.getElementById("motivation").textContent = msg;
+}
 
 const div=document.createElement("div");
 div.style.marginTop="10px";
@@ -430,6 +432,7 @@ function unlockPremium(){
 // --- Calendar ---
 function buildCalendar(){
   const cal = document.getElementById("calendar");
+  cal.innerHTML = "";
   const today = new Date().getDate();
   for(let i=1;i<=30;i++){
     const d = document.createElement("div");
