@@ -352,9 +352,14 @@ function addTask() {
   if(!input.value) return;
 
   tasks.push({
-  text:`[${section}] ${input.value}`,
+  text: input.value,
+  section: section,
   done:false,
   priority,
+  deadline,
+  repeat,
+  time
+  });
   xp:10,
   date:new Date().toLocaleDateString()
 });
@@ -377,11 +382,11 @@ function renderTasks(){
   const ul = document.getElementById("taskList");
   ul.innerHTML = "";
   tasks
-    .filter(t => t.text.startsWith(`[${currentSection}]`))
+    .filter(t => t.section === currentSection)
     .forEach((t,i)=>{
       const li = document.createElement("li");
       let color = t.priority==="High"?"red":t.priority==="Medium"?"orange":"green";
-      li.innerHTML = `<span class="${t.done?'done':''}">${t.text} <small style="color:${color}">(${t.priority})</small></span>
+      li.innerHTML = `<span class="${t.done?'done':''}">${t.text} <small>${t.deadline || ""}</small> style="color:${color}">(${t.priority})</small></span>
                       <button onclick="toggleTask(${tasks.indexOf(t)})">✓</button>`;
       ul.appendChild(li);
     });
@@ -414,7 +419,7 @@ function checkRewards(){
 }
 
 function giveReward(days){
-  const rewardTime = Date.now() + days*24*60*60*1000;
+  const rewardTime = Date.now() + days*24*42*60*1000;
   localStorage.setItem("premiumUntil", rewardTime);
   alert(`🎁 Reward Unlocked! Premium for ${days} days!`);
 }
