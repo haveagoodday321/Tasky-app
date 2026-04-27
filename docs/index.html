@@ -350,15 +350,18 @@ function addTask() {
   const section = document.getElementById("sectionSelect").value;
   const priority = document.getElementById("priority").value;
   if(!input.value) return;
+const deadline = document.getElementById("deadline").value;
+const repeat = document.getElementById("repeat").value;
+const time = document.getElementById("time").value;
 
   tasks.push({
   text: input.value,
   section: section,
   done:false,
   priority,
-  deadline,
-  repeat,
-  time
+  deadline: deadline,
+  repeat: repeat,
+  time: time
   });
   xp:10,
   date:new Date().toLocaleDateString()
@@ -387,7 +390,7 @@ function renderTasks(){
       const li = document.createElement("li");
       let color = t.priority==="High"?"red":t.priority==="Medium"?"orange":"green";
       li.innerHTML = `<span class="${t.done?'done':''}">${t.text} <small>${t.deadline || ""}</small> style="color:${color}">(${t.priority})</small></span>
-                      <button onclick="toggleTask(${tasks.indexOf(t)})">✓</button>`;
+                      <button onclick="toggleTask(${i})">✓</button>`;
       ul.appendChild(li);
     });
 }
