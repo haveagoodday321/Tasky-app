@@ -311,19 +311,7 @@ let weekTasks = Number(localStorage.getItem("weekTasks")) || 0;
 
 document.getElementById("xp").textContent=xp;if(tasks[i].done){
   xp += 10;
-  weekTasks++;}
-  
-  if(xp >= level * 100){
-    level++;
-    xp = 0;
-  }
-
-  localStorage.setItem("xp", xp);
-  localStorage.setItem("level", level);
-  localStorage.setItem("weekTasks", weekTasks);
-
-  document.getElementById("xp").textContent = xp;
-  document.getElementById("level").textContent = level;
+  weekTasks++;
   document.getElementById("weekTasks").textContent = weekTasks;
   }
 document.getElementById("level").textContent=level;
@@ -366,6 +354,25 @@ const time = document.getElementById("time").value;
 // --- Toggle Task ---
 function toggleTask(i){
   tasks[i].done = !tasks[i].done;
+
+  if(tasks[i].done){
+    xp += 10;
+    weekTasks++;
+
+    if(xp >= level * 100){
+      level++;
+      xp = 0;
+    }
+
+    localStorage.setItem("xp", xp);
+    localStorage.setItem("level", level);
+    localStorage.setItem("weekTasks", weekTasks);
+
+    document.getElementById("xp").textContent = xp;
+    document.getElementById("level").textContent = level;
+    document.getElementById("weekTasks").textContent = weekTasks;
+  }
+
   saveTasks();
   renderTasks();
   updateStreak();
@@ -380,7 +387,14 @@ function renderTasks(){
     .forEach((t,i)=>{
       const li = document.createElement("li");
       let color = t.priority==="High"?"red":t.priority==="Medium"?"orange":"green";
-      li.innerHTML = `<span class="${t.done?'done':''}">${t.text} <small>${t.deadline || ""}</small> style="color:${color}">(${t.priority})</small></span>
+      li.innerHTML = `
+  <span class="${t.done ? 'done' : ''}">
+    ${t.text}
+    <small>${t.deadline || ""}</small>
+    <small style="color:${color}">(${t.priority})</small>
+  </span>
+  <button onclick="toggleTask(${i})">✓</button>
+`;
                       <button onclick="toggleTask(${i})">✓</button>`;
       ul.appendChild(li);
     });
