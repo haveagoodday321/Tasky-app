@@ -361,10 +361,9 @@ const time = document.getElementById("time").value;
   priority,
   deadline: deadline,
   repeat: repeat,
-  time: time
-  });
-  xp:10,
-  date:new Date().toLocaleDateString()
+  time: time,
+  xp: 10,
+  date: new Date().toLocaleDateString()
 });
   input.value = "";
   renderTasks();
@@ -422,7 +421,7 @@ function checkRewards(){
 }
 
 function giveReward(days){
-  const rewardTime = Date.now() + days*24*42*60*1000;
+  const rewardTime = Date.now() + days*24*60*60*1000;
   localStorage.setItem("premiumUntil", rewardTime);
   alert(`🎁 Reward Unlocked! Premium for ${days} days!`);
 }
