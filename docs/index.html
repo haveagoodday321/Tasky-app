@@ -309,7 +309,7 @@ let xp=Number(localStorage.getItem("xp"))||0;
 let level = Number(localStorage.getItem("level")) || 1;
 let weekTasks = Number(localStorage.getItem("weekTasks")) || 0;
 
-document.getElementById("xp").textContent=xp;if(tasks[i].done){
+document.getElementById("xp").textContent = xp;{
   xp += 10;
   weekTasks++;
   document.getElementById("weekTasks").textContent = weekTasks;
@@ -360,8 +360,8 @@ function toggleTask(i){
     weekTasks++;
 
     if(xp >= level * 100){
-      level++;
-      xp = 0;
+  xp -= level * 100;
+  level++;
     }
 
     localStorage.setItem("xp", xp);
@@ -394,6 +394,7 @@ function renderTasks(){
     <small style="color:${color}">(${t.priority})</small>
   </span>
   <button onclick="toggleTask(${i})">✓</button>
+`;
 `;
                       <button onclick="toggleTask(${i})">✓</button>`;
       ul.appendChild(li);
