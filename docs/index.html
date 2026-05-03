@@ -505,19 +505,6 @@ function showSection(sec){
 sectionNotesArea.addEventListener("input", e=>{
   sectionNotes[currentSection] = e.target.value;
   localStorage.setItem("sectionNotes", JSON.stringify(sectionNotes));
-});
-
-// --- Initialize ---
-function updateStats(){
-
-const total=tasks.length;
-
-const done=tasks.filter(t=>t.done).length;
-
-let percent=0;
-
-if(total>0){
-percent=Math.round((done/total)*100);
 }
 
 document.getElementById("productivity").textContent=percent+"%";
@@ -528,15 +515,7 @@ function updateStats(){
   const total = tasks.length;
   const done = tasks.filter(t => t.done).length;
 
-  let percent = 0;
-
-  if(total > 0){
-    percent = Math.round((done / total) * 100);
-  }
-
-  document.getElementById("productivity").textContent = percent + "%";
-  document.getElementById("progressBar").style.width = percent + "%";
-}
+  let percent = 
 
   }
 renderTasks();
