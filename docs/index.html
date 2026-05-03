@@ -309,11 +309,8 @@ let xp=Number(localStorage.getItem("xp"))||0;
 let level = Number(localStorage.getItem("level")) || 1;
 let weekTasks = Number(localStorage.getItem("weekTasks")) || 0;
 
-document.getElementById("xp").textContent = xp;{
-  xp += 10;
-  weekTasks++;
-  document.getElementById("weekTasks").textContent = weekTasks;
-  }
+document.getElementById("xp").textContent = xp;
+document.getElementById("weekTasks").textContent = weekTasks;
 document.getElementById("level").textContent=level;
 document.getElementById("weekTasks").textContent=weekTasks;
 let lastComplete = localStorage.getItem("lastComplete") || 0;
@@ -395,8 +392,6 @@ function renderTasks(){
   </span>
   <button onclick="toggleTask(${i})">✓</button>
 `;
-`;
-                      <button onclick="toggleTask(${i})">✓</button>`;
       ul.appendChild(li);
     });
 }
@@ -530,7 +525,19 @@ document.getElementById("productivity").textContent=percent+"%";
 
 document.getElementById("progressBar").style.width=percent+"%";
 
-document.getElementById("weekTasks").textContent=done;
+function updateStats(){
+  const total = tasks.length;
+  const done = tasks.filter(t => t.done).length;
+
+  let percent = 0;
+
+  if(total > 0){
+    percent = Math.round((done / total) * 100);
+  }
+
+  document.getElementById("productivity").textContent = percent + "%";
+  document.getElementById("progressBar").style.width = percent + "%";
+}
 
   }
 renderTasks();
