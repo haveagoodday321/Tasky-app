@@ -380,19 +380,22 @@ function toggleTask(i){
 function renderTasks(){
   const ul = document.getElementById("taskList");
   ul.innerHTML = "";
+
   tasks
     .filter(t => t.section === currentSection)
     .forEach((t,i)=>{
       const li = document.createElement("li");
       let color = t.priority==="High"?"red":t.priority==="Medium"?"orange":"green";
+
       li.innerHTML = `
-  <span class="${t.done ? 'done' : ''}">
-    ${t.text}
-    <small>${t.deadline || ""}</small>
-    <small style="color:${color}">(${t.priority})</small>
-  </span>
-  <button onclick="toggleTask(${i})">✓</button>
-`;
+        <span class="${t.done ? 'done' : ''}">
+          ${t.text}
+          <small>${t.deadline || ""}</small>
+          <small style="color:${color}">(${t.priority})</small>
+        </span>
+        <button onclick="toggleTask(${i})">✓</button>
+      `;
+
       ul.appendChild(li);
     });
 }
