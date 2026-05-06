@@ -506,18 +506,19 @@ sectionNotesArea.addEventListener("input", e=>{
   sectionNotes[currentSection] = e.target.value;
   localStorage.setItem("sectionNotes", JSON.stringify(sectionNotes));
 }
-
-document.getElementById("productivity").textContent=percent+"%";
-
-document.getElementById("progressBar").style.width=percent+"%";
-
 function updateStats(){
   const total = tasks.length;
   const done = tasks.filter(t => t.done).length;
 
-  let percent = 
+  let percent = 0;
 
+  if(total > 0){
+    percent = Math.round((done / total) * 100);
   }
+
+  document.getElementById("productivity").textContent = percent + "%";
+  document.getElementById("progressBar").style.width = percent + "%";
+}
 renderTasks();
 buildCalendar();
 dailyMotivation();
