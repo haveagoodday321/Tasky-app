@@ -156,6 +156,7 @@ li{
 
 <body><script src="https://js.stripe.com/v3/"></script>
 <script>
+alert("JS is running");
 const stripe = Stripe("YOUR_PUBLISHABLE_KEY_HERE"); // Replace with your Stripe publishable key
 
 async function subscribe() {
@@ -312,7 +313,7 @@ let weekTasks = Number(localStorage.getItem("weekTasks")) || 0;
 document.getElementById("xp").textContent = xp;
 document.getElementById("level").textContent=level;
 document.getElementById("weekTasks").textContent=weekTasks;
-let lastComplete = localStorage.getItem("lastComplete") || 0;
+let lastComplete = localStorage.getItem("lastComplete") || "";
 let premiumUntil = Number(localStorage.getItem("premiumUntil")) || 0;
 let currentSection = "General"; // default
 
