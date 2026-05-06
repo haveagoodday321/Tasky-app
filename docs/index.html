@@ -341,8 +341,9 @@ const time = document.getElementById("time").value;
   time: time,
   xp: 10,
   date: new Date().toLocaleDateString()
-   alert("✅ Task added!");
 });
+
+alert("✅ Task added!");
   input.value = "";
   renderTasks();
   saveTasks();
@@ -510,7 +511,7 @@ function showSection(sec){
 sectionNotesArea.addEventListener("input", e=>{
   sectionNotes[currentSection] = e.target.value;
   localStorage.setItem("sectionNotes", JSON.stringify(sectionNotes));
-}
+});
 function updateStats(){
   const total = tasks.length;
   const done = tasks.filter(t => t.done).length;
