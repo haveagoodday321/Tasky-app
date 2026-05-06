@@ -156,7 +156,6 @@ li{
 
 <body><script src="https://js.stripe.com/v3/"></script>
 <script>
-alert("JS is running");
 const stripe = Stripe("YOUR_PUBLISHABLE_KEY_HERE"); // Replace with your Stripe publishable key
 
 async function subscribe() {
@@ -281,6 +280,7 @@ Your information is never shared or sent to any server.
 </div> <!-- container -->
 
 <script>
+alert("JS is running");
 // --- Notes ---
 document.getElementById("notes").value = localStorage.getItem("notes") || "";
 document.getElementById("notes").addEventListener("input", e => {
