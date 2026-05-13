@@ -352,28 +352,36 @@ alert("✅ Task added!");
 
 // --- Toggle Task ---
 function toggleTask(i){
-  tasks[i].done = !tasks[i].done;
 
-  if(tasks[i].done){
-    xp += 10;
-    weekTasks++;
+  // Stop if task already completed
+  if(tasks[i].done) return;
 
-    if(xp >= level * 100){
-  xp -= level * 100;
-  level++;
-    }
+  // Mark task as done
+  tasks[i].done = true;
 
-    localStorage.setItem("xp", xp);
-    localStorage.setItem("level", level);
-    localStorage.setItem("weekTasks", weekTasks);
+  // Give XP once
+  xp += 10;
+  weekTasks++;
 
-    document.getElementById("xp").textContent = xp;
-    document.getElementById("level").textContent = level;
-    document.getElementById("weekTasks").textContent = weekTasks;
+  // Level system
+  if(xp >= level * 100){
+    xp -= level * 100;
+    level++;
   }
+
+  // Save data
+  localStorage.setItem("xp", xp);
+  localStorage.setItem("level", level);
+  localStorage.setItem("weekTasks", weekTasks);
+
+  // Update screen
+  document.getElementById("xp").textContent = xp;
+  document.getElementById("level").textContent = level;
+  document.getElementById("weekTasks").textContent = weekTasks;
 
   saveTasks();
   renderTasks();
+  updateStats();
   updateStreak();
 }
 
