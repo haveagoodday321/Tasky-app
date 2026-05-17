@@ -402,7 +402,7 @@ function renderTasks(){
           <small>${t.deadline || ""}</small>
           <small style="color:${color}">(${t.priority})</small>
         </span>
-        <button onclick="toggleTask(${i})">✓</button>
+        <button onclick="toggleTask(${i})" ${t.done ? "disabled" : ""}>✓</button>
       `;
 
       ul.appendChild(li);
