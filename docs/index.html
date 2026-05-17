@@ -230,7 +230,12 @@ async function subscribe() {
 <div id="motivation" style="margin-top:10px;font-style:italic;color:#555"></div>
   <button class="secondary" onclick="clearCompleted()">Clear Completed Tasks</button>
 </div>
-
+  
+<div class="card">
+  <h3>Recent Completed Tasks</h3>
+  <ul id="completedList"></ul>
+</div>
+  
 <!-- Mini Calendar -->
 <div class="card">
   <h3>Mini Calendar</h3>
@@ -407,7 +412,21 @@ function renderTasks(){
 
       ul.appendChild(li);
     });
-}
+function renderCompletedTasks(){
+  const completedList = document.getElementById("completedList");
+
+  completedList.innerHTML = "";
+
+  const completed = tasks.filter(t => t.done)
+                         .slice(-15)
+                         .reverse();
+
+  completed.forEach(task => {
+    const li = document.createElement("li");
+    li.textContent = task.text;
+    completedList.appendChild(li);
+  });
+}}
 
 // --- Clear Completed ---
 function clearCompleted(){
