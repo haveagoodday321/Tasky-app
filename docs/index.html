@@ -351,6 +351,7 @@ const time = document.getElementById("time").value;
 alert("✅ Task added!");
   input.value = "";
   renderTasks();
+  renderCompletedTasks();
   saveTasks();
   updateStreak();
 }
@@ -554,6 +555,7 @@ function updateStats(){
   document.getElementById("progressBar").style.width = percent + "%";
 }
 renderTasks();
+renderCompletedTasks();
 buildCalendar();
 dailyMotivation();
 updateStats();
