@@ -364,7 +364,10 @@ function toggleTask(i){
   if(tasks[i].done) return;
 
   // Mark task as done
-  tasks[i].done = true;
+tasks[i].done = true;
+
+// Completion message
+alert(`🎉 Task completed: ${tasks[i].text}`);
 
   // Give XP once
   xp += 10;
