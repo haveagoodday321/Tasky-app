@@ -337,7 +337,7 @@ const repeat = document.getElementById("repeat").value;
 const time = document.getElementById("time").value;
 
   tasks.push({
-  text: input.value,
+  text: input.value.trim(),
   section: section,
   done:false,
   priority,
@@ -345,7 +345,8 @@ const time = document.getElementById("time").value;
   repeat: repeat,
   time: time,
   xp: 10,
-  date: new Date().toLocaleDateString()
+
+  createdAt: new Date().toISOString()
 });
 
 alert("✅ Task added!");
@@ -394,35 +395,64 @@ function toggleTask(i){
 
 // --- Render Tasks ---
 function renderTasks(){
+
   const ul = document.getElementById("taskList");
   ul.innerHTML = "";
 
   tasks
-    .filter(t => t.section === currentSection)
-    .forEach((t,i)=>{
-      const li = document.createElement("li");
-      let color =
-        t.priority==="High" ? "red" :
-        t.priority==="Medium" ? "orange" :
-        "green";
+  .filter(t => t.section === currentSection)
+  .forEach((t,i)=>{
 
-      li.innerHTML = `
-        <span class="${t.done ? 'done' : ''}">
-          ${t.text}
-          <small>${t.deadline || ""}</small>
-          <small style="color:${color}">
-            (${t.priority})
-          </small>
-        </span>
+    const li = document.createElement("li");
 
-        <button onclick="toggleTask(${i})"
-        ${t.done ? "disabled" : ""}>
-        ✓
-        </button>
-      `;
+    let color =
+      t.priority==="High" ? "red" :
+      t.priority==="Medium" ? "orange" :
+      "green";
 
-      ul.appendChild(li);
-    });
+    const createdDate = new Date(t.createdAt);
+    const today = new Date();
+
+    let displayTime;
+
+    if(
+      createdDate.toDateString() ===
+      today.toDateString()
+    ){
+
+      displayTime =
+      createdDate.toLocaleTimeString([],{
+        hour:'2-digit',
+        minute:'2-digit'
+      });
+
+    } else {
+
+      displayTime =
+      createdDate.toLocaleDateString();
+
+    }
+
+    li.innerHTML = `
+      <span class="${t.done ? 'done' : ''}">
+        ${t.text}
+        <br>
+        <small>${displayTime}</small>
+        <small style="color:${color}">
+          (${t.priority})
+        </small>
+      </span>
+
+      <button onclick="toggleTask(${i})"
+      ${t.done ? "disabled" : ""}>
+      ✓
+      </button>
+    `;
+
+    ul.appendChild(li);
+
+  });
+
 }
 
 
