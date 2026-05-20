@@ -285,7 +285,6 @@ Your information is never shared or sent to any server.
 </div> <!-- container -->
 
 <script>
-alert("JS is running");
 // --- Notes ---
 document.getElementById("notes").value = localStorage.getItem("notes") || "";
 document.getElementById("notes").addEventListener("input", e => {
@@ -354,7 +353,6 @@ alert("✅ Task added!");
   renderTasks();
   renderCompletedTasks();
   saveTasks();
-  updateStreak();
 }
 
 // --- Toggle Task ---
@@ -482,9 +480,17 @@ function renderCompletedTasks(){
 
 // --- Clear Completed ---
 function clearCompleted(){
-  tasks = tasks.filter(t=>!t.done);
-  renderTasks();
-  saveTasks();
+
+if(confirm("Delete all completed tasks?")){
+
+tasks = tasks.filter(t=>!t.done);
+
+renderTasks();
+
+saveTasks();
+
+}
+
 }
 
 // --- Streak & Rewards ---
