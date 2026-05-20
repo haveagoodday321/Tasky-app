@@ -72,6 +72,10 @@ button{
   color:white;
   font-weight:600;
   cursor:pointer;
+  li button{
+  width:auto;
+  padding:6px 12px;
+  }
 }
 
 button.secondary{
@@ -354,7 +358,10 @@ const time = document.getElementById("time").value;
 });
 
 alert("✅ Task added!");
-  input.value = "";
+  input.value="";
+document.getElementById("deadline").value="";
+document.getElementById("time").value="";
+document.getElementById("priority").selectedIndex=0;
   renderTasks();
   renderCompletedTasks();
   saveTasks();
