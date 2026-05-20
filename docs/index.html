@@ -319,7 +319,9 @@ document.getElementById("level").textContent=level;
 document.getElementById("weekTasks").textContent=weekTasks;
 let lastComplete = localStorage.getItem("lastComplete") || "";
 let premiumUntil = Number(localStorage.getItem("premiumUntil")) || 0;
-let currentSection = "General"; // default
+let currentSection =
+localStorage.getItem("currentSection")
+|| "General"; // default
 
 document.getElementById("streak").textContent = streak;
 
@@ -330,7 +332,10 @@ function addTask() {
   const input = document.getElementById("taskInput");
   const section = document.getElementById("sectionSelect").value;
   const priority = document.getElementById("priority").value;
-  if(!input.value) return;
+  if(!input.value){
+   alert("Please enter a task");
+   return;
+  }
 const deadline = document.getElementById("deadline").value;
 const repeat = document.getElementById("repeat").value;
 const time = document.getElementById("time").value;
@@ -486,7 +491,8 @@ if(confirm("Delete all completed tasks?")){
 tasks = tasks.filter(t=>!t.done);
 
 renderTasks();
-
+renderCompletedTasksa();
+updateStats();
 saveTasks();
 
 }
@@ -590,6 +596,10 @@ function showSection(sec){
   currentSection = sec;
   renderTasks();
   sectionNotesArea.value = sectionNotes[sec];
+  localStorage.setItem(
+  "currentSection",
+  currentSection
+);
 }
 
 // Save section notes
