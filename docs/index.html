@@ -72,11 +72,11 @@ button{
   color:white;
   font-weight:600;
   cursor:pointer;
+}
   li button{
   width:auto;
   padding:6px 12px;
   }
-}
 
 button.secondary{
   background:#e5e7eb;
@@ -498,7 +498,7 @@ if(confirm("Delete all completed tasks?")){
 tasks = tasks.filter(t=>!t.done);
 
 renderTasks();
-renderCompletedTasksa();
+renderCompletedTasks();
 updateStats();
 saveTasks();
 
@@ -537,8 +537,29 @@ function isPremiumActive(){
 
 // --- Premium Unlock ---
 function unlockPremium(){
-  document.getElementById("premiumLocked").classList.remove("locked");
-  alert("✨ Premium trial unlocked!");
+
+if(trialUsed){
+alert("Free trial already used");
+return;
+}
+
+const trialEnd =
+Date.now() + (30*24*60*60*1000);
+
+localStorage.setItem(
+"premiumUntil",
+trialEnd
+);
+
+localStorage.setItem(
+"trialUsed",
+true
+);
+
+alert(
+"🎉 Premium unlocked for 30 days!"
+);
+
 }
 
 // --- Calendar ---
