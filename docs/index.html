@@ -571,6 +571,8 @@ function isPremiumActive(){
 }
 
 // --- Premium Unlock ---
+  let trialUsed =
+localStorage.getItem("trialUsed")==="true";
 function unlockPremium(){
 
 if(trialUsed){
