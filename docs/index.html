@@ -411,7 +411,18 @@ function renderTasks(){
 
   const ul = document.getElementById("taskList");
   ul.innerHTML = "";
+if(
+tasks.filter(
+t=>t.section===currentSection
+).length===0
+){
 
+ul.innerHTML=
+"<p>No tasks yet 📋</p>";
+
+return;
+
+  }
   tasks
   .filter(t => t.section === currentSection)
   .forEach((t,i)=>{
@@ -456,10 +467,18 @@ function renderTasks(){
         </small>
       </span>
 
-      <button onclick="toggleTask(${i})"
-      ${t.done ? "disabled" : ""}>
-      ✓
-      </button>
+      <div>
+
+<button onclick="toggleTask(${i})"
+${t.done ? "disabled" : ""}>
+✓
+</button>
+
+<button onclick="deleteTask(${i})">
+🗑️
+</button>
+
+</div>
     `;
 
     ul.appendChild(li);
@@ -468,7 +487,23 @@ function renderTasks(){
 
 }
 
+function deleteTask(i){
 
+if(confirm("Delete task?")){
+
+tasks.splice(i,1);
+
+saveTasks();
+
+renderTasks();
+
+renderCompletedTasks();
+
+updateStats();
+
+}
+
+}
 // --- Recent Completed Tasks ---
 function renderCompletedTasks(){
 
