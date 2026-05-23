@@ -407,70 +407,72 @@ alert(`🎉 Task completed: ${tasks[i].text}`);
 }
 
 // --- Render Tasks ---
-function renderTasks(){
+function renderTasks()
+tasks.forEach((t,i)=>{
 
-  const ul = document.getElementById("taskList");
-  ul.innerHTML = "";
-if(
-tasks.filter(
-t=>t.section===currentSection
-).length===0
-){
+if(t.section!==currentSection) return;
 
-ul.innerHTML=
-"<p>No tasks yet 📋</p>";
+const li=document.createElement("li");
 
-return;
+let color=
+t.priority==="High"?"red":
+t.priority==="Medium"?"orange":
+"green";
 
-  }
-  tasks
-  .filter(t => t.section === currentSection)
-  .forEach((t,i)=>{
+const createdDate=new Date(t.createdAt);
+let warning="";
 
-    const li = document.createElement("li");
+if(t.deadline){
 
-    let color =
-      t.priority==="High" ? "red" :
-      t.priority==="Medium" ? "orange" :
-      "green";
+const due=new Date(t.deadline);
 
-    const createdDate = new Date(t.createdAt);
-    const today = new Date();
+const diff=Math.ceil(
+(due-new Date())/
+(1000*60*60*24)
+);
 
-    let displayTime;
+if(diff===0){
+warning="⚠️ Due today";
+}
 
-    if(
-      createdDate.toDateString() ===
-      today.toDateString()
-    ){
+else if(diff===1){
+warning="⏳ Due tomorrow";
+}
 
-      displayTime =
-      createdDate.toLocaleTimeString([],{
-        hour:'2-digit',
-        minute:'2-digit'
-      });
+}
+const today=new Date();
 
-    } else {
+let displayTime;
 
-      displayTime =
-      createdDate.toLocaleDateString();
+if(createdDate.toDateString()===today.toDateString()){
 
-    }
+displayTime=
+createdDate.toLocaleTimeString([],{
+hour:'2-digit',
+minute:'2-digit'
+});
 
-    li.innerHTML = `
-      <span class="${t.done ? 'done' : ''}">
-        ${t.text}
-        <br>
-        <small>${displayTime}</small>
-        <small style="color:${color}">
-          (${t.priority})
-        </small>
-      </span>
+}else{
 
-      <div>
+displayTime=
+createdDate.toLocaleDateString();
+
+}
+
+li.innerHTML=`
+<span class="${t.done?'done':''}">
+${t.text}
+<br>
+<small>${displayTime}</small>
+<small style="color:${color}">
+(${t.priority})
+</small>
+</span>
+
+<div>
 
 <button onclick="toggleTask(${i})"
-${t.done ? "disabled" : ""}>
+${t.done?"disabled":""}>
 ✓
 </button>
 
@@ -479,11 +481,11 @@ ${t.done ? "disabled" : ""}>
 </button>
 
 </div>
-    `;
+`;
 
-    ul.appendChild(li);
+ul.appendChild(li);
 
-  });
+});
 
 }
 
