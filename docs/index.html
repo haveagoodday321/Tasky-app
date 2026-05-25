@@ -417,6 +417,10 @@ function renderTasks()
 tasks.forEach((t,i)=>{
 
 if(t.section!==currentSection) return;
+if(
+!t.text.toLowerCase()
+.includes(search)
+) return;
 
 const li=document.createElement("li");
 
