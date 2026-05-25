@@ -196,6 +196,10 @@ async function subscribe() {
 <div class="card">
   <h3>Add Task</h3>
   <input id="taskInput" placeholder="Task"/>
+  <input
+  <id="searchTask"
+placeholder="Search tasks..."
+oninput="renderTasks()">
   <input type="date" id="deadline"/>
   <select id="priority">
     <option>Low</option>
@@ -266,7 +270,9 @@ style="height:10px;background:#6366f1;width:0%;border-radius:6px">
   <span class="badge premium-badge">Premium</span>
   <h3>Tasky Premium</h3>
   <p class="soft">$0.98 / month</p>
-  <button onclick="subscribe()">Subscribe Monthly</button>
+  <button onclick="alert('Payments coming soon')">
+Subscribe Monthly
+  </button>
 </div>
 
 <div class="card">
@@ -420,6 +426,27 @@ t.priority==="Medium"?"orange":
 "green";
 
 const createdDate=new Date(t.createdAt);
+const today = new Data();
+let warning="";
+
+if(t.deadline){
+
+const due=new Date(t.deadline);
+
+const diff=Math.ceil(
+(due-new Date())/
+(1000*60*60*24)
+);
+
+if(diff===0){
+warning="⚠️ Due today";
+}
+
+else if(diff===1){
+warning="⏳ Due tomorrow";
+}
+
+}
 let warning="";
 
 if(t.deadline){
@@ -464,6 +491,9 @@ li.innerHTML=`
 ${t.text}
 <br>
 <small>${displayTime}</small>
+
+<small>${warning}</small>
+
 <small style="color:${color}">
 (${t.priority})
 </small>
@@ -687,6 +717,31 @@ function updateStats(){
   document.getElementById("productivity").textContent = percent + "%";
   document.getElementById("progressBar").style.width = percent + "%";
 }
+if(isPremiumActive()){
+
+const daysLeft=Math.ceil(
+(premiumUntil-Date.now())/
+(1000*60*60*24)
+);
+
+document.querySelector(
+".premium-card .soft"
+).textContent=
+`Premium active (${daysLeft} days left)`;
+
+}
+if(!localStorage.getItem("welcomed")){
+
+alert(
+"👋 Welcome to Tasky! Create tasks, build streaks and stay productive."
+);
+
+localStorage.setItem(
+"welcomed",
+true
+);
+
+  }
 renderTasks();
 renderCompletedTasks();
 buildCalendar();
