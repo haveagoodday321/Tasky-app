@@ -197,7 +197,7 @@ async function subscribe() {
   <h3>Add Task</h3>
   <input id="taskInput" placeholder="Task"/>
   <input
-  <id="searchTask"
+id="searchTask"
 placeholder="Search tasks..."
 oninput="renderTasks()">
   <input type="date" id="deadline"/>
@@ -234,6 +234,7 @@ oninput="renderTasks()">
   <ul id="taskList"></ul>
   <p>Streak: <span id="streak">0</span> 🔥</p><p>XP: <span id="xp">0</span> ⭐</p>
 <p>Level: <span id="level">1</span> 🏆</p>
+  <p>Total Tasks: <span id="taskCount">0</span></p>
 
 <div id="motivation" style="margin-top:10px;font-style:italic;color:#555"></div>
   <button class="secondary" onclick="clearCompleted()">Clear Completed Tasks</button>
@@ -414,6 +415,15 @@ alert(`🎉 Task completed: ${tasks[i].text}`);
 
 // --- Render Tasks ---
 function renderTasks(){
+
+const ul = document.getElementById("taskList");
+ul.innerHTML = "";
+
+const search =
+document.getElementById("searchTask")
+.value
+.toLowerCase();
+
 tasks.forEach((t,i)=>{
 
 if(t.section!==currentSection) return;
@@ -431,7 +441,7 @@ t.priority==="Medium"?"orange":
 "green";
 
 const createdDate=new Date(t.createdAt);
-const today = new Data();
+const today = new Date();
 let warning="";
 
 if(t.deadline){
@@ -450,28 +460,13 @@ warning="⚠️ Due today";
 else if(diff===1){
 warning="⏳ Due tomorrow";
 }
-
+  
+else if(diff < 0){
+warning = "❌ Overdue";
 }
-let warning="";
-
-if(t.deadline){
-
-const due=new Date(t.deadline);
-
-const diff=Math.ceil(
-(due-new Date())/
-(1000*60*60*24)
-);
-
-if(diff===0){
-warning="⚠️ Due today";
+  
 }
-
-else if(diff===1){
-warning="⏳ Due tomorrow";
-}
-
-}
+  
 const today=new Date();
 
 let displayTime;
@@ -548,6 +543,14 @@ function renderCompletedTasks(){
     document.getElementById("completedList");
 
   completedList.innerHTML = "";
+  if(completed.length===0){
+
+completedList.innerHTML =
+"<p>No completed tasks yet ✅</p>";
+
+return;
+
+  }
 
   const completed = tasks
     .filter(t => t.done)
@@ -711,6 +714,10 @@ sectionNotesArea.addEventListener("input", e=>{
 });
 function updateStats(){
   const total = tasks.length;
+
+document.getElementById("taskCount")
+.textContent = total;
+
   const done = tasks.filter(t => t.done).length;
 
   let percent = 0;
