@@ -413,10 +413,11 @@ alert(`🎉 Task completed: ${tasks[i].text}`);
 }
 
 // --- Render Tasks ---
-function renderTasks()
+function renderTasks(){
 tasks.forEach((t,i)=>{
 
 if(t.section!==currentSection) return;
+  
 if(
 !t.text.toLowerCase()
 .includes(search)
