@@ -372,6 +372,7 @@ document.getElementById("priority").selectedIndex=0;
   renderTasks();
   renderCompletedTasks();
   saveTasks();
+  updateStats();
 }
 
 // --- Toggle Task ---
@@ -423,7 +424,22 @@ const search =
 document.getElementById("searchTask")
 .value
 .toLowerCase();
+  
+tasks
+.sort((a,b)=>{
 
+const order = {
+High:3,
+Medium:2,
+Low:1
+};
+
+return order[b.priority] -
+order[a.priority];
+
+})
+.forEach((t,i)=>{
+  
 tasks.forEach((t,i)=>{
 
 if(t.section!==currentSection) return;
@@ -543,13 +559,18 @@ function renderCompletedTasks(){
     document.getElementById("completedList");
 
   completedList.innerHTML = "";
+
+  const completed = tasks
+    .filter(t => t.done)
+    .slice(-15)
+    .reverse();
+
   if(completed.length===0){
 
-completedList.innerHTML =
-"<p>No completed tasks yet ✅</p>";
+    completedList.innerHTML =
+    "<p>No completed tasks yet ✅</p>";
 
-return;
-
+    return;
   }
 
   const completed = tasks
@@ -699,12 +720,19 @@ taskCard.appendChild(sectionNotesContainer);
 
 function showSection(sec){
   currentSection = sec;
-  renderTasks();
-  sectionNotesArea.value = sectionNotes[sec];
+
   localStorage.setItem(
-  "currentSection",
-  currentSection
-);
+    "currentSection",
+    currentSection
+  );
+
+  renderTasks();
+
+  sectionNotesArea.value =
+    sectionNotes[sec];
+
+  saveTasks();
+};
 }
 
 // Save section notes
