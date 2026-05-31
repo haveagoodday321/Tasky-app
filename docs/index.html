@@ -155,6 +155,11 @@ li{
   color:white;
   font-weight:bold;
 }
+  
+.light{
+background:#f5f5f5;
+color:black;
+  }
 </style>
 </head>
 
@@ -185,6 +190,9 @@ async function subscribe() {
 <div class="container">
 
 <h1>Tasky</h1>
+<button onclick="toggleTheme()">
+🌙 Theme
+</button>
 
 <!-- Quick Notes -->
 <div class="card">
@@ -238,6 +246,9 @@ oninput="renderTasks()">
 
 <div id="motivation" style="margin-top:10px;font-style:italic;color:#555"></div>
   <button class="secondary" onclick="clearCompleted()">Clear Completed Tasks</button>
+  <button onclick="exportTasks()">
+📤 Export Backup
+  </button>
 </div>
   
 <div class="card">
@@ -390,6 +401,18 @@ alert(`🎉 Task completed: ${tasks[i].text}`);
   // Give XP once
   xp += 10;
   weekTasks++;
+  updateStats();
+  if(weekTasks===10){
+alert(
+"🏅 Achievement Unlocked: 10 Tasks Completed!"
+);
+}
+
+if(streak===30){
+alert(
+"🔥 Achievement Unlocked: 30 Day Streak!"
+);
+}
 
   // Level system
   if(xp >= level * 100){
@@ -517,9 +540,15 @@ ${t.text}
 
 <div>
 
+<div>
+
 <button onclick="toggleTask(${i})"
 ${t.done?"disabled":""}>
 ✓
+</button>
+
+<button onclick="editTask(${i})">
+✏️
 </button>
 
 <button onclick="deleteTask(${i})">
@@ -534,7 +563,24 @@ ul.appendChild(li);
 });
 
 }
+         
+function editTask(i){
 
+  const newText = prompt(
+    "Edit task:",
+    tasks[i].text
+  );
+
+  if(newText){
+
+    tasks[i].text = newText;
+
+    saveTasks();
+    renderTasks();
+
+  }
+}
+  
 function deleteTask(i){
 
 if(confirm("Delete task?")){
@@ -659,7 +705,15 @@ alert(
 );
 
 }
+  
+function toggleTheme(){
 
+document.body.classList.toggle(
+"light"
+);
+
+}
+  
 // --- Calendar ---
 function buildCalendar(){
   const cal = document.getElementById("calendar");
@@ -740,6 +794,30 @@ sectionNotesArea.addEventListener("input", e=>{
   sectionNotes[currentSection] = e.target.value;
   localStorage.setItem("sectionNotes", JSON.stringify(sectionNotes));
 });
+  
+function exportTasks(){
+
+const data =
+JSON.stringify(tasks);
+
+const blob =
+new Blob([data],{
+type:"application/json"
+});
+
+const a =
+document.createElement("a");
+
+a.href =
+URL.createObjectURL(blob);
+
+a.download =
+"tasky-backup.json";
+
+a.click();
+
+  }
+  
 function updateStats(){
   const total = tasks.length;
 
