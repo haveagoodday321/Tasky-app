@@ -243,60 +243,6 @@ oninput="renderTasks()">
 <h3>🎯 Today's Focus</h3>
 <ul id="focusList"></ul>
   </div>
-function updateFocus(){
-
-const focus =
-document.getElementById("focusList");
-
-focus.innerHTML = "";
-
-const today = new Date();
-
-const focusTasks = tasks.filter(t=>{
-
-if(t.done) return false;
-
-if(t.priority==="High") return true;
-
-if(t.deadline){
-
-const due = new Date(t.deadline);
-
-const diff = Math.ceil(
-(due - today) /
-(1000*60*60*24)
-);
-
-return diff <= 1;
-
-}
-
-return false;
-
-});
-
-if(focusTasks.length===0){
-
-focus.innerHTML =
-"<li>🎉 Nothing urgent today!</li>";
-
-return;
-
-}
-
-focusTasks.slice(0,5).forEach(task=>{
-
-const li =
-document.createElement("li");
-
-li.textContent =
-task.text;
-
-focus.appendChild(li);
-
-});
-
-}
   <ul id="taskList"></ul>
   <p>Streak: <span id="streak">0</span> 🔥</p><p>XP: <span id="xp">0</span> ⭐</p>
 <p>Level: <span id="level">1</span> 🏆</p>
@@ -368,8 +314,60 @@ Your information is never shared or sent to any server.
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
+function updateFocus(){
 
-<script>
+const focus =
+document.getElementById("focusList");
+
+focus.innerHTML = "";
+
+const today = new Date();
+
+const focusTasks = tasks.filter(t=>{
+
+if(t.done) return false;
+
+if(t.priority==="High") return true;
+
+if(t.deadline){
+
+const due = new Date(t.deadline);
+
+const diff = Math.ceil(
+(due - today) /
+(1000*60*60*24)
+);
+
+return diff <= 1;
+
+}
+
+return false;
+
+});
+
+if(focusTasks.length===0){
+
+focus.innerHTML =
+"<li>🎉 Nothing urgent today!</li>";
+
+return;
+
+}
+
+focusTasks.slice(0,5).forEach(task=>{
+
+const li =
+document.createElement("li");
+
+li.textContent =
+task.text;
+
+focus.appendChild(li);
+
+});
+
+}
 // --- Notes ---
 document.getElementById("notes").value = localStorage.getItem("notes") || "";
 document.getElementById("notes").addEventListener("input", e => {
@@ -406,7 +404,18 @@ let lastComplete = localStorage.getItem("lastComplete") || "";
 let premiumUntil = Number(localStorage.getItem("premiumUntil")) || 0;
 let currentSection =
 localStorage.getItem("currentSection")
-|| "General"; // default
+|| "General";
+const savedTheme =
+localStorage.getItem("theme");
+
+if(savedTheme==="light"){
+
+document.body.classList.add(
+"light"
+);
+
+}
+  // default
 
 document.getElementById("streak").textContent = streak;
 
@@ -607,7 +616,10 @@ tasks.filter(t =>
 t.section===currentSection &&
 t.text.toLowerCase().includes(search)
 );
-
+const search =
+document.getElementById("searchTask")
+.value
+.toLowerCase();
 if(filteredTasks.length===0){
 
 ul.innerHTML =
@@ -616,11 +628,6 @@ ul.innerHTML =
 return;
 
     }
-
-const search =
-document.getElementById("searchTask")
-.value
-.toLowerCase();
   
 tasks
 .sort((a,b)=>{
@@ -636,8 +643,6 @@ order[a.priority];
 
 })
 .forEach((t,i)=>{
-  
-tasks.forEach((t,i)=>{
 
 if(t.section!==currentSection) return;
   
@@ -797,11 +802,6 @@ function renderCompletedTasks(){
 
     return;
   }
-
-  const completed = tasks
-    .filter(t => t.done)
-    .slice(-15)
-    .reverse();
 
   completed.forEach(task=>{
     const li = document.createElement("li");
@@ -973,16 +973,6 @@ function showSection(sec){
     "currentSection",
     currentSection
   );
-const savedTheme =
-localStorage.getItem("theme");
-
-if(savedTheme==="light"){
-
-document.body.classList.add(
-"light"
-);
-
-}
   
   renderTasks();
 
@@ -990,7 +980,6 @@ document.body.classList.add(
     sectionNotes[sec];
 
   saveTasks();
-};
 }
 
 // Save section notes
