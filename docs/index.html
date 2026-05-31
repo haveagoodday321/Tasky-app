@@ -442,6 +442,20 @@ function renderTasks(){
 
 const ul = document.getElementById("taskList");
 ul.innerHTML = "";
+  const filteredTasks =
+tasks.filter(t =>
+t.section===currentSection &&
+t.text.toLowerCase().includes(search)
+);
+
+if(filteredTasks.length===0){
+
+ul.innerHTML =
+"<p>No matching tasks 📋</p>";
+
+return;
+
+    }
 
 const search =
 document.getElementById("searchTask")
