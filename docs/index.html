@@ -305,6 +305,11 @@ Your information is never shared or sent to any server.
 </p>
 </div>
 </div> <!-- container -->
+</div> <!-- container -->
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<script>
 
 <script>
 // --- Notes ---
@@ -354,6 +359,8 @@ function addTask() {
   const input = document.getElementById("taskInput");
   const section = document.getElementById("sectionSelect").value;
   const priority = document.getElementById("priority").value;
+  const category =
+document.getElementById("category").value;
   if(!input.value){
    alert("Please enter a task");
    return;
@@ -363,10 +370,11 @@ const repeat = document.getElementById("repeat").value;
 const time = document.getElementById("time").value;
 
   tasks.push({
-  text: input.value.trim(),
-  section: section,
-  done:false,
-  priority,
+text: input.value.trim(),
+section: section,
+done:false,
+priority,
+category,
   deadline: deadline,
   repeat: repeat,
   time: time,
@@ -394,9 +402,15 @@ function toggleTask(i){
 
   // Mark task as done
 tasks[i].done = true;
+  
+confetti();
 
 // Completion message
 alert(`🎉 Task completed: ${tasks[i].text}`);
+const audio =
+new Audio("success.mp3");
+
+audio.play();
 
   // Give XP once
   xp += 10;
@@ -546,6 +560,10 @@ ${t.text}
 <small>${displayTime}</small>
 
 <small>${warning}</small>
+
+<small>
+📂 ${t.category}
+</small>
 
 <small style="color:${color}">
 (${t.priority})
@@ -722,9 +740,23 @@ alert(
   
 function toggleTheme(){
 
-document.body.classList.toggle(
+document.body.classList.toggle("light");
+
+if(document.body.classList.contains("light")){
+
+localStorage.setItem(
+"theme",
 "light"
 );
+
+}else{
+
+localStorage.setItem(
+"theme",
+"dark"
+);
+
+}
 
 }
   
@@ -793,7 +825,17 @@ function showSection(sec){
     "currentSection",
     currentSection
   );
+const savedTheme =
+localStorage.getItem("theme");
 
+if(savedTheme==="light"){
+
+document.body.classList.add(
+"light"
+);
+
+}
+  
   renderTasks();
 
   sectionNotesArea.value =
