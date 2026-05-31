@@ -239,6 +239,64 @@ oninput="renderTasks()">
 
   <!-- Section Tabs & Notes will be inserted dynamically -->
 
+  <div class="card">
+<h3>🎯 Today's Focus</h3>
+<ul id="focusList"></ul>
+  </div>
+function updateFocus(){
+
+const focus =
+document.getElementById("focusList");
+
+focus.innerHTML = "";
+
+const today = new Date();
+
+const focusTasks = tasks.filter(t=>{
+
+if(t.done) return false;
+
+if(t.priority==="High") return true;
+
+if(t.deadline){
+
+const due = new Date(t.deadline);
+
+const diff = Math.ceil(
+(due - today) /
+(1000*60*60*24)
+);
+
+return diff <= 1;
+
+}
+
+return false;
+
+});
+
+if(focusTasks.length===0){
+
+focus.innerHTML =
+"<li>🎉 Nothing urgent today!</li>";
+
+return;
+
+}
+
+focusTasks.slice(0,5).forEach(task=>{
+
+const li =
+document.createElement("li");
+
+li.textContent =
+task.text;
+
+focus.appendChild(li);
+
+});
+
+}
   <ul id="taskList"></ul>
   <p>Streak: <span id="streak">0</span> 🔥</p><p>XP: <span id="xp">0</span> ⭐</p>
 <p>Level: <span id="level">1</span> 🏆</p>
@@ -392,6 +450,7 @@ document.getElementById("priority").selectedIndex=0;
   renderCompletedTasks();
   saveTasks();
   updateStats();
+  updateFocus();
 }
 
 // --- Toggle Task ---
@@ -449,7 +508,94 @@ alert(
   renderCompletedTasks();
   updateStats();
   updateStreak();
+  updateFocus();
 }
+function processRepeatingTasks(){
+
+const today =
+new Date().toDateString();
+
+tasks.forEach(task=>{
+
+if(
+task.done &&
+task.repeat !== "none"
+){
+
+if(task.lastRepeat===today)
+return;
+
+task.done = false;
+
+task.lastRepeat = today;
+
+}
+
+});
+
+saveTasks();
+
+}
+  
+processRepeatingTasks();
+
+function enableNotifications(){
+
+if(
+"Notification" in window
+){
+
+Notification.requestPermission();
+
+}
+
+}
+
+enableNotifications();
+
+function checkReminders(){
+
+tasks.forEach(task=>{
+
+if(
+task.time &&
+!task.done
+){
+
+const now =
+new Date();
+
+const current =
+now.getHours()
+.toString()
+.padStart(2,"0")
++
+":" +
+now.getMinutes()
+.toString()
+.padStart(2,"0");
+
+if(current===task.time){
+
+new Notification(
+"⏰ Task Reminder",
+{
+body: task.text
+}
+);
+
+}
+
+}
+
+});
+
+}
+
+setInterval(
+checkReminders,
+60000
+);
 
 // --- Render Tasks ---
 function renderTasks(){
@@ -627,6 +773,7 @@ renderCompletedTasks();
 
 updateStats();
 
+updateFocus();
 }
 
 }
@@ -675,6 +822,7 @@ renderTasks();
 renderCompletedTasks();
 updateStats();
 saveTasks();
+updateFocus();
 
 }
 
