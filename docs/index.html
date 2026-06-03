@@ -320,6 +320,10 @@ Completed
 
 </div>
 <div class="card">
+<div class="card">
+<h3>🏆 Achievements</h3>
+<ul id="achievementList"></ul>
+</div>
 <h3>Privacy Policy</h3>
 <p style="font-size:12px">
 Tasky stores all tasks locally on your device.
@@ -333,23 +337,7 @@ Your information is never shared or sent to any server.
 
 <script>
 function updateFocus(){
-focusTasks.sort((a,b)=>{
 
-const scoreA =
-(a.priority==="High"?3:
-a.priority==="Medium"?2:1)
-+
-(a.deadline?2:0);
-
-const scoreB =
-(b.priority==="High"?3:
-b.priority==="Medium"?2:1)
-+
-(b.deadline?2:0);
-
-return scoreB-scoreA;
-
-});
 const focus =
 document.getElementById("focusList");
 
@@ -371,6 +359,24 @@ const diff = Math.ceil(
 (due - today) /
 (1000*60*60*24)
 );
+
+focusTasks.sort((a,b)=>{
+const scoreA =
+(a.priority==="High"?3:
+a.priority==="Medium"?2:1)
++
+(a.deadline?2:0);
+
+const scoreB =
+(b.priority==="High"?3:
+b.priority==="Medium"?2:1)
++
+(b.deadline?2:0);
+
+return scoreB-scoreA;
+
+});
+
 
 return diff <= 1;
 
@@ -494,7 +500,31 @@ document.getElementById("priority").selectedIndex=0;
   saveTasks();
   updateStats();
   updateFocus();
+  updateDailyProgress();
 }
+
+function renderAchievements(){
+
+const list =
+document.getElementById(
+"achievementList"
+);
+
+list.innerHTML="";
+
+achievements.forEach(a=>{
+
+const li =
+document.createElement("li");
+
+li.textContent =
+"🏅 " + a;
+
+list.appendChild(li);
+
+});
+
+  }
 
 function sortPriority(){
 
@@ -606,6 +636,7 @@ alert(
   updateStats();
   updateStreak();
   updateFocus();
+  updateDailyProgress();
 }
   
 function updateDailyProgress(){
@@ -644,6 +675,11 @@ document.getElementById(
 percent + "%";
 
 }
+let achievements =
+JSON.parse(
+localStorage.getItem("achievements")
+|| "[]"
+);
 
 function unlockAchievement(name){
 
@@ -658,10 +694,30 @@ localStorage.setItem(
 JSON.stringify(achievements)
 );
 
+renderAchievements();
+
+confetti();
+
 alert(
-"🏆 Achievement Unlocked: " +
-name
+"🏆 Achievement Unlocked: "
++ name
 );
+
+}
+if(streak===7)
+unlockAchievement("7 Day Streak");
+
+if(streak===30)
+unlockAchievement("30 Day Streak");
+
+if(level===5)
+unlockAchievement("Level 5");
+
+if(level===10)
+unlockAchievement("Level 10");
+
+if(tasks.length===50)
+unlockAchievement("Created 50 Tasks");
 
 }
   
@@ -720,9 +776,68 @@ Notification.requestPermission();
 }
 
 enableNotifications();
+function updateFocusScore(){
+
+let score = 100;
+
+tasks.forEach(task=>{
+
+if(
+task.priority==="High"
+&& !task.done
+){
+
+score -= 10;
+
+}
+
+});
+
+if(score<0)
+score=0;
+
+document.getElementById(
+"focusScore"
+).textContent =
+score;
+
+}
 
 function checkReminders(){
+if(current===task.time){
 
+new Notification(
+"⏰ Task Reminder",
+{
+body:
+task.text +
+" (" +
+task.priority +
+" Priority)"
+}
+);
+
+}
+if(task.deadline){
+
+const due =
+new Date(task.deadline);
+
+if(
+due < new Date()
+&& !task.done
+){
+
+new Notification(
+"🚨 Overdue Task",
+{
+body: task.text
+}
+);
+
+}
+
+  }
 tasks.forEach(task=>{
 
 if(
@@ -770,15 +885,16 @@ function renderTasks(){
 
 const ul = document.getElementById("taskList");
 ul.innerHTML = "";
+const search =
+document.getElementById("searchTask")
+.value
+.toLowerCase();
   const filteredTasks =
 tasks.filter(t =>
 t.section===currentSection &&
 t.text.toLowerCase().includes(search)
 );
-const search =
-document.getElementById("searchTask")
-.value
-.toLowerCase();
+
 if(filteredTasks.length===0){
 
 ul.innerHTML =
