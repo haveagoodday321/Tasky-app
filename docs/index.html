@@ -243,6 +243,13 @@ oninput="renderTasks()">
 <h3>🎯 Today's Focus</h3>
 <ul id="focusList"></ul>
   </div>
+<button onclick="sortPriority()">
+Priority
+</button>
+
+<button onclick="sortDeadline()">
+Deadline
+</button>
   <ul id="taskList"></ul>
   <p>Streak: <span id="streak">0</span> 🔥</p><p>XP: <span id="xp">0</span> ⭐</p>
 <p>Level: <span id="level">1</span> 🏆</p>
@@ -302,6 +309,17 @@ Subscribe Monthly
   <button onclick="unlockPremium()">Try Premium</button>
 </div>
 <div class="card">
+<h3>Today's Progress</h3>
+
+<p>
+<span id="todayPercent">
+0%
+</span>
+Completed
+</p>
+
+</div>
+<div class="card">
 <h3>Privacy Policy</h3>
 <p style="font-size:12px">
 Tasky stores all tasks locally on your device.
@@ -315,7 +333,23 @@ Your information is never shared or sent to any server.
 
 <script>
 function updateFocus(){
+focusTasks.sort((a,b)=>{
 
+const scoreA =
+(a.priority==="High"?3:
+a.priority==="Medium"?2:1)
++
+(a.deadline?2:0);
+
+const scoreB =
+(b.priority==="High"?3:
+b.priority==="Medium"?2:1)
++
+(b.deadline?2:0);
+
+return scoreB-scoreA;
+
+});
 const focus =
 document.getElementById("focusList");
 
@@ -462,8 +496,62 @@ document.getElementById("priority").selectedIndex=0;
   updateFocus();
 }
 
+function sortPriority(){
+
+tasks.sort((a,b)=>{
+
+const order = {
+High:3,
+Medium:2,
+Low:1
+};
+
+return order[b.priority]
+-
+order[a.priority];
+
+});
+
+renderTasks();
+
+}
+
+function sortDeadline(){
+
+tasks.sort((a,b)=>{
+
+if(!a.deadline) return 1;
+if(!b.deadline) return -1;
+
+return new Date(a.deadline)
+-
+new Date(b.deadline);
+
+});
+
+renderTasks();
+
+    }
+
 // --- Toggle Task ---
 function toggleTask(i){
+if(weekTasks===1){
+unlockAchievement(
+"First Task Completed"
+);
+}
+
+if(weekTasks===10){
+unlockAchievement(
+"10 Tasks Completed"
+);
+}
+
+if(weekTasks===50){
+unlockAchievement(
+"50 Tasks Completed"
+);
+}
 
   // Stop if task already completed
   if(tasks[i].done) return;
@@ -519,6 +607,64 @@ alert(
   updateStreak();
   updateFocus();
 }
+  
+function updateDailyProgress(){
+
+const today =
+new Date().toDateString();
+
+const todayTasks =
+tasks.filter(task=>
+new Date(
+task.createdAt
+).toDateString()===today
+);
+
+const completed =
+todayTasks.filter(
+t=>t.done
+).length;
+
+let percent = 0;
+
+if(todayTasks.length>0){
+
+percent =
+Math.round(
+(completed /
+todayTasks.length)
+*100
+);
+
+}
+
+document.getElementById(
+"todayPercent"
+).textContent =
+percent + "%";
+
+}
+
+function unlockAchievement(name){
+
+if(
+achievements.includes(name)
+) return;
+
+achievements.push(name);
+
+localStorage.setItem(
+"achievements",
+JSON.stringify(achievements)
+);
+
+alert(
+"🏆 Achievement Unlocked: " +
+name
+);
+
+}
+  
 function processRepeatingTasks(){
 
 const today =
@@ -534,7 +680,20 @@ task.repeat !== "none"
 if(task.lastRepeat===today)
 return;
 
-task.done = false;
+tasks.push({
+
+text: task.text,
+section: task.section,
+priority: task.priority,
+category: task.category,
+deadline: task.deadline,
+repeat: task.repeat,
+time: task.time,
+done:false,
+createdAt:
+new Date().toISOString()
+
+});
 
 task.lastRepeat = today;
 
