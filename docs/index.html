@@ -501,8 +501,34 @@ document.getElementById("priority").selectedIndex=0;
   updateStats();
   updateFocus();
   updateDailyProgress();
+  updatePlanner();
 }
+  
+function renderAchievements(){
 
+const list =
+document.getElementById(
+"achievementList"
+);
+
+if(!list) return;
+
+list.innerHTML="";
+
+achievements.forEach(a=>{
+
+const li =
+document.createElement("li");
+
+li.textContent =
+"🏅 " + a;
+
+list.appendChild(li);
+
+});
+
+  }
+  
 function renderAchievements(){
 
 const list =
@@ -589,6 +615,9 @@ unlockAchievement(
   // Mark task as done
 tasks[i].done = true;
   
+tasks[i].completedAt =
+new Date().toISOString();
+  
 confetti();
 
 // Completion message
@@ -637,7 +666,36 @@ alert(
   updateStreak();
   updateFocus();
   updateDailyProgress();
+  updatePlanner();
 }
+
+function updatePlanner(){
+
+const planner =
+document.getElementById(
+"plannerList"
+);
+
+planner.innerHTML="";
+
+const urgent =
+tasks
+.filter(t=>!t.done)
+.slice(0,3);
+
+urgent.forEach(task=>{
+
+const li =
+document.createElement("li");
+
+li.textContent =
+task.text;
+
+planner.appendChild(li);
+
+});
+
+  }
   
 function updateDailyProgress(){
 
@@ -736,20 +794,10 @@ task.repeat !== "none"
 if(task.lastRepeat===today)
 return;
 
-tasks.push({
+task.done = false;
 
-text: task.text,
-section: task.section,
-priority: task.priority,
-category: task.category,
-deadline: task.deadline,
-repeat: task.repeat,
-time: task.time,
-done:false,
-createdAt:
-new Date().toISOString()
-
-});
+task.createdAt =
+new Date().toISOString();
 
 task.lastRepeat = today;
 
@@ -1054,6 +1102,8 @@ renderCompletedTasks();
 updateStats();
 
 updateFocus();
+
+updatePlanner();
 }
 
 }
@@ -1286,6 +1336,68 @@ a.click();
 
   }
   
+function updateTaskHistory(){
+
+const now =
+new Date();
+
+const today =
+now.toDateString();
+
+let todayDone = 0;
+let weekDone = 0;
+let monthDone = 0;
+
+tasks.forEach(task=>{
+
+if(!task.completedAt)
+return;
+
+const completed =
+new Date(task.completedAt);
+
+if(
+completed.toDateString()
+=== today
+){
+todayDone++;
+}
+
+if(
+(now - completed)
+<
+7*24*60*60*1000
+){
+weekDone++;
+}
+
+if(
+completed.getMonth()
+===
+now.getMonth()
+){
+monthDone++;
+}
+
+});
+
+document.getElementById(
+"todayDone"
+).textContent =
+todayDone;
+
+document.getElementById(
+"weekDone"
+).textContent =
+weekDone;
+
+document.getElementById(
+"monthDone"
+).textContent =
+monthDone;
+
+  }
+
 function updateStats(){
   const total = tasks.length;
 
@@ -1334,6 +1446,8 @@ buildCalendar();
 dailyMotivation();
 updateStats();
 updateStreak();
+updateTaskHistory();
+renderAchievements();
 </script>
 </body>
 </html>
