@@ -150,6 +150,11 @@ li{
   cursor:pointer;
 }
 
+.overdue{
+background:#fee2e2;
+border-left:4px solid red;
+}
+
 .today{
   background:linear-gradient(135deg,#6366f1,#8b5cf6);
   color:white;
@@ -236,9 +241,20 @@ oninput="renderTasks()">
     <option>Personal</option>
   </select>
   <button onclick="addTask()">Add</button>
+  <button onclick="showWeeklyReport()">
+📊 Weekly Report
+  </button>
 
   <!-- Section Tabs & Notes will be inserted dynamically -->
+<div class="card">
+<h3>🎯 Daily Goal</h3>
 
+<p>
+Tasks Completed:
+<span id="goalCount">0</span>/5
+</p>
+
+</div>
   <div class="card">
 <h3>🎯 Today's Focus</h3>
 <ul id="focusList"></ul>
@@ -608,6 +624,12 @@ unlockAchievement(
 "50 Tasks Completed"
 );
 }
+unlockAchievement("7 Day Streak");
+unlockAchievement("30 Day Streak");
+unlockAchievement("100 Tasks Completed");
+unlockAchievement("Level 10");
+unlockAchievement("Perfect Day");
+unlockAchievement("Focus Master");
 
   // Stop if task already completed
   if(tasks[i].done) return;
@@ -933,6 +955,10 @@ function renderTasks(){
 
 const ul = document.getElementById("taskList");
 ul.innerHTML = "";
+const search =
+document.getElementById("searchTask")
+.value
+.toLowerCase();
 const search =
 document.getElementById("searchTask")
 .value
@@ -1445,7 +1471,6 @@ renderCompletedTasks();
 buildCalendar();
 dailyMotivation();
 updateStats();
-updateStreak();
 updateTaskHistory();
 renderAchievements();
 </script>
