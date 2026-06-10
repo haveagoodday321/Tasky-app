@@ -228,8 +228,8 @@ oninput="renderTasks()">
   </select><select id="category">
 <option>School</option>
 <option>Work</option>
-<option>Personal</option>
-<option>Gym</option>
+<option>personal</option>
+<option>gym</option>
 </select>
 
 <select id="repeat">
@@ -241,11 +241,11 @@ oninput="renderTasks()">
 
 <input type="time" id="time"/>
   <select id="sectionSelect">
-    <option>General</option>
-    <option>School</option>
-    <option>Work</option>
-    <option>Study Notes</option>
-    <option>Personal</option>
+    <option>🏠General</option>
+    <option>🎓School</option>
+    <option>💼Work</option>
+    <option>📚Study Notes</option>
+    <option>👤Personal</option>
   </select>
   <button onclick="addTask()">Add</button>
   <button onclick="showWeeklyReport()">
@@ -317,6 +317,7 @@ Deadline
 </div>
   
 <!-- Mini Calendar -->
+<h3 id="monthTitle">📅 June 2026</h3>
 <div class="card">
   <h3>Mini Calendar</h3>
   <div class="calendar" id="calendar"></div>
@@ -550,7 +551,21 @@ document.getElementById("priority").selectedIndex=0;
   updateFocus();
   updateDailyProgress();
   updatePlanner();
+  updateFocusScore();
 }
+
+function updateGoal(){
+
+const completed =
+tasks.filter(t=>t.done).length;
+
+document.getElementById(
+"goalCount"
+).textContent =
+Math.min(completed,5);
+
+}
+
   
 function renderAchievements(){
 
@@ -576,30 +591,19 @@ list.appendChild(li);
 });
 
   }
-  
-function renderAchievements(){
 
-const list =
-document.getElementById(
-"achievementList"
+function showWeeklyReport(){
+
+alert(
+`Tasks Completed: ${weekTasks}
+XP: ${xp}
+Level: ${level}
+Streak: ${streak}`
 );
 
-list.innerHTML="";
+}
 
-achievements.forEach(a=>{
-
-const li =
-document.createElement("li");
-
-li.textContent =
-"🏅 " + a;
-
-list.appendChild(li);
-
-});
-
-  }
-
+  
 function sortPriority(){
 
 tasks.sort((a,b)=>{
@@ -691,6 +695,21 @@ alert(
 );
 }
 
+if(streak===7)
+unlockAchievement("7 Day Streak");
+
+if(streak===30)
+unlockAchievement("30 Day Streak");
+
+if(level===5)
+unlockAchievement("Level 5");
+
+if(level===10)
+unlockAchievement("Level 10");
+
+if(tasks.length===50)
+unlockAchievement("Created 50 Tasks");
+
 if(streak===30){
 alert(
 "🔥 Achievement Unlocked: 30 Day Streak!"
@@ -721,6 +740,8 @@ alert(
   updateFocus();
   updateDailyProgress();
   updatePlanner();
+  updateTaskHistory();
+ updateFocusScore();
 }
 
 function updatePlanner(){
@@ -815,21 +836,6 @@ alert(
 + name
 );
 
-if(streak===7)
-unlockAchievement("7 Day Streak");
-
-if(streak===30)
-unlockAchievement("30 Day Streak");
-
-if(level===5)
-unlockAchievement("Level 5");
-
-if(level===10)
-unlockAchievement("Level 10");
-
-if(tasks.length===50)
-unlockAchievement("Created 50 Tasks");
-
 }
   
 function processRepeatingTasks(){
@@ -905,17 +911,7 @@ score;
 }
 
 function checkReminders(){
-if(current===task.time){
-
-new Notification(
-"⏰ Task Reminder",
-{
-body:
-task.text +
-" (" +
-task.priority +
-" Priority)"
-}
+tasks.forEach(task=>{
 );
 
 }
@@ -1157,6 +1153,10 @@ updateStats();
 updateFocus();
 
 updatePlanner();
+
+updateTaskHistory();
+
+updateFocusScore();
 }
 
 }
@@ -1201,6 +1201,8 @@ renderCompletedTasks();
 updateStats();
 saveTasks();
 updateFocus();
+updateTaskHistory();
+updateFocusScore();
 
 }
 
@@ -1288,22 +1290,36 @@ localStorage.setItem(
   
 // --- Calendar ---
 function buildCalendar(){
-  const cal = document.getElementById("calendar");
-  cal.innerHTML = "";
-  const today = new Date().getDate();
-  const days =
-new Date(
-year,
-month+1,
-0
-).getDate();
-  for(let i=1;i<=30;i++){
-    const d = document.createElement("div");
-    d.className = "day";
-    d.textContent = i;
-    if(i===today) d.classList.add("today");
-    cal.appendChild(d);
-  }
+
+const cal =
+document.getElementById("calendar");
+
+cal.innerHTML="";
+
+const now = new Date();
+
+const year = now.getFullYear();
+const month = now.getMonth();
+
+const days =
+new Date(year,month+1,0).getDate();
+
+for(let i=1;i<=days;i++){
+
+const d =
+document.createElement("div");
+
+d.className="day";
+d.textContent=i;
+
+if(i===now.getDate()){
+d.classList.add("today");
+}
+
+cal.appendChild(d);
+
+}
+
 }
 
 // --- Service Worker ---
