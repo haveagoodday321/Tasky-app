@@ -406,10 +406,18 @@ if(t.deadline){
 const due = new Date(t.deadline);
 
 const diff = Math.ceil(
-(due - today) /
-(1000*60*60*24)
-)
+(due - today)/(1000*60*60*24)
+);
+
+return diff <= 1;
+}
+
+return false;
+
+});
+
 focusTasks.sort((a,b)=>{
+
 const scoreA =
 (a.priority==="High"?3:
 a.priority==="Medium"?2:1)
@@ -423,36 +431,6 @@ b.priority==="Medium"?2:1)
 (b.deadline?2:0);
 
 return scoreB-scoreA;
-
-});
-
-
-return diff <= 1;
-
-}
-
-return false;
-
-});
-
-if(focusTasks.length===0){
-
-focus.innerHTML =
-"<li>🎉 Nothing urgent today!</li>";
-
-return;
-
-}
-
-focusTasks.slice(0,5).forEach(task=>{
-
-const li =
-document.createElement("li");
-
-li.textContent =
-task.text;
-
-focus.appendChild(li);
 
 });
 
