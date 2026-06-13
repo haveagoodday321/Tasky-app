@@ -206,6 +206,33 @@ linear-gradient(
 #dc2626
 );
 
+body.ocean{
+background:
+linear-gradient(
+180deg,
+#0ea5e9,
+#0369a1
+);
+}
+
+body.emerald{
+background:
+linear-gradient(
+180deg,
+#10b981,
+#047857
+);
+}
+
+body.sunset{
+background:
+linear-gradient(
+180deg,
+#f97316,
+#dc2626
+);
+}
+
 </style>
 </head>
 
@@ -460,17 +487,35 @@ return false;
 
 });
 
-focusTasks.sort((a,b)
+focusTasks.sort((a,b)=>{
+
+const scoreA =
+(a.priority==="High"?3:
+a.priority==="Medium"?2:1)
++
+(a.deadline?2:0);
+
+const scoreB =
+(b.priority==="High"?3:
+b.priority==="Medium"?2:1)
++
+(b.deadline?2:0);
+
+return scoreB-scoreA;
+
+});
+
 focusTasks.slice(0,5).forEach(task=>{
 
-const li = document.createElement("li");
+const li =
+document.createElement("li");
 
 li.textContent =
 `🎯 ${task.text}`;
 
 focus.appendChild(li);
 
-});=>{
+});
 
 const scoreA =
 (a.priority==="High"?3:
@@ -693,12 +738,17 @@ unlockAchievement(
 "50 Tasks Completed"
 );
 }
+if(streak>=7)
 unlockAchievement("7 Day Streak");
+
+if(streak>=30)
 unlockAchievement("30 Day Streak");
+
+if(weekTasks>=100)
 unlockAchievement("100 Tasks Completed");
+
+if(level>=10)
 unlockAchievement("Level 10");
-unlockAchievement("Perfect Day");
-unlockAchievement("Focus Master");
 
   // Stop if task already completed
   if(tasks[i].done) return;
@@ -945,10 +995,9 @@ score;
 }
 
 function checkReminders(){
-tasks.forEach(task=>{
-);
 
-}
+tasks.forEach(task=>{
+
 if(task.deadline){
 
 const due =
@@ -968,8 +1017,7 @@ body: task.text
 
 }
 
-  }
-tasks.forEach(task=>{
+}
 
 if(
 task.time &&
@@ -1006,11 +1054,6 @@ body: task.text
 
 }
 
-setInterval(
-checkReminders,
-60000
-);
-
 // --- Render Tasks ---
 function renderTasks(){
 
@@ -1025,10 +1068,6 @@ tasks.filter(t =>
 t.section===currentSection &&
 t.text.toLowerCase().includes(search)
 );
-
-if(warning==="❌ Overdue"){
-li.classList.add("overdue");
-}
   
 if(filteredTasks.length===0){
 
@@ -1063,6 +1102,10 @@ if(
 
 const li=document.createElement("li");
 
+if(warning==="❌ Overdue"){
+li.classList.add("overdue");
+}
+
 let color=
 t.priority==="High"?"red":
 t.priority==="Medium"?"orange":
@@ -1091,6 +1134,10 @@ warning="⏳ Due tomorrow";
   
 else if(diff < 0){
 warning = "❌ Overdue";
+}
+
+if(warning==="❌ Overdue"){
+li.classList.add("overdue");
 }
   
 }
@@ -1403,9 +1450,29 @@ if(i===now.getDate()){
 d.classList.add("today");
 }
 
-cal.appendChild(d);
-const weekdays = [
+const hasTask =
+tasks.some(task=>{
 
+if(!task.deadline)
+return false;
+
+const due =
+new Date(task.deadline);
+
+return (
+due.getDate()===i &&
+due.getMonth()===month &&
+due.getFullYear()===year
+);
+
+});
+
+if(hasTask){
+d.style.border =
+"2px solid orange";
+}
+
+cal.appendChild(d);
 
 }
 
