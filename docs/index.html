@@ -185,27 +185,6 @@ background:gold;
 border-radius:10px;
 }
 
-background:
-linear-gradient(
-180deg,
-#0ea5e9,
-#0369a1
-);
-
-background:
-linear-gradient(
-180deg,
-#10b981,
-#047857
-);
-
-background:
-linear-gradient(
-180deg,
-#f97316,
-#dc2626
-);
-
 body.ocean{
 background:
 linear-gradient(
@@ -488,20 +467,6 @@ return false;
 });
 
 focusTasks.sort((a,b)=>{
-
-const scoreA =
-(a.priority==="High"?3:
-a.priority==="Medium"?2:1)
-+
-(a.deadline?2:0);
-
-const scoreB =
-(b.priority==="High"?3:
-b.priority==="Medium"?2:1)
-+
-(b.deadline?2:0);
-
-return scoreB-scoreA;
 
 });
 
@@ -1102,10 +1067,6 @@ if(
 
 const li=document.createElement("li");
 
-if(warning==="❌ Overdue"){
-li.classList.add("overdue");
-}
-
 let color=
 t.priority==="High"?"red":
 t.priority==="Medium"?"orange":
@@ -1135,6 +1096,10 @@ warning="⏳ Due tomorrow";
 else if(diff < 0){
 warning = "❌ Overdue";
 }
+
+if(warning==="❌ Overdue"){
+li.classList.add("overdue");
+  }
 
 if(warning==="❌ Overdue"){
 li.classList.add("overdue");
@@ -1420,21 +1385,6 @@ d.innerHTML =
 cal.appendChild(d);
 
 });
-const hasTask =
-tasks.some(task=>{
-
-if(!task.deadline)
-return false;
-
-return new Date(task.deadline)
-.getDate()===i;
-
-});
-
-if(hasTask){
-d.style.border =
-"2px solid orange";
-}
 const days =
 new Date(year,month+1,0).getDate();
 
