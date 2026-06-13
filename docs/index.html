@@ -172,6 +172,40 @@ background:white;
 color:black;
 }
 
+.achievement-bar{
+height:10px;
+background:#ddd;
+border-radius:10px;
+}
+
+#achievementFill{
+height:10px;
+width:0%;
+background:gold;
+border-radius:10px;
+}
+
+background:
+linear-gradient(
+180deg,
+#0ea5e9,
+#0369a1
+);
+
+background:
+linear-gradient(
+180deg,
+#10b981,
+#047857
+);
+
+background:
+linear-gradient(
+180deg,
+#f97316,
+#dc2626
+);
+
 </style>
 </head>
 
@@ -241,11 +275,11 @@ oninput="renderTasks()">
 
 <input type="time" id="time"/>
   <select id="sectionSelect">
-    <option>🏠General</option>
-    <option>🎓School</option>
-    <option>💼Work</option>
-    <option>📚Study Notes</option>
-    <option>👤Personal</option>
+    <option value="General">🏠 General</option>
+<option value="School">🎓 School</option>
+<option value="Work">💼 Work</option>
+<option value="Study Notes">📚 Study Notes</option>
+<option value="Personal">👤 Personal</option>
   </select>
   <button onclick="addTask()">Add</button>
   <button onclick="showWeeklyReport()">
@@ -372,6 +406,16 @@ Completed
 <div class="card">
 <div class="card">
 <h3>🏆 Achievements</h3>
+<p>
+Progress:
+<span id="achievementPercent">
+0%
+</span>
+</p>
+
+<div class="achievement-bar">
+<div id="achievementFill"></div>
+</div>
 <ul id="achievementList"></ul>
 </div>
 <h3>Privacy Policy</h3>
@@ -416,7 +460,17 @@ return false;
 
 });
 
-focusTasks.sort((a,b)=>{
+focusTasks.sort((a,b)
+focusTasks.slice(0,5).forEach(task=>{
+
+const li = document.createElement("li");
+
+li.textContent =
+`🎯 ${task.text}`;
+
+focus.appendChild(li);
+
+});=>{
 
 const scoreA =
 (a.priority==="High"?3:
@@ -530,6 +584,7 @@ document.getElementById("priority").selectedIndex=0;
   updateDailyProgress();
   updatePlanner();
   updateFocusScore();
+  updateGoal();
 }
 
 function updateGoal(){
@@ -720,6 +775,7 @@ alert(
   updatePlanner();
   updateTaskHistory();
  updateFocusScore();
+  updateGoal();
 }
 
 function updatePlanner(){
@@ -970,6 +1026,10 @@ t.section===currentSection &&
 t.text.toLowerCase().includes(search)
 );
 
+if(warning==="❌ Overdue"){
+li.classList.add("overdue");
+}
+  
 if(filteredTasks.length===0){
 
 ul.innerHTML =
@@ -1135,6 +1195,8 @@ updatePlanner();
 updateTaskHistory();
 
 updateFocusScore();
+
+updateGoal();
 }
 
 }
@@ -1181,6 +1243,7 @@ saveTasks();
 updateFocus();
 updateTaskHistory();
 updateFocusScore();
+updateGoal();
 
 }
 
@@ -1278,7 +1341,53 @@ const now = new Date();
 
 const year = now.getFullYear();
 const month = now.getMonth();
+const months = [
+"January","February","March",
+"April","May","June",
+"July","August","September",
+"October","November","December"
+];
 
+document.getElementById(
+"monthTitle"
+).textContent =
+`📅 ${months[month]} ${year}`;
+const weekdays = [
+"Mon",
+"Tue",
+"Wed",
+"Thu",
+"Fri",
+"Sat",
+"Sun"
+];
+
+weekdays.forEach(day=>{
+
+const d =
+document.createElement("div");
+
+d.innerHTML =
+`<strong>${day}</strong>`;
+
+cal.appendChild(d);
+
+});
+const hasTask =
+tasks.some(task=>{
+
+if(!task.deadline)
+return false;
+
+return new Date(task.deadline)
+.getDate()===i;
+
+});
+
+if(hasTask){
+d.style.border =
+"2px solid orange";
+}
 const days =
 new Date(year,month+1,0).getDate();
 
@@ -1295,6 +1404,8 @@ d.classList.add("today");
 }
 
 cal.appendChild(d);
+const weekdays = [
+
 
 }
 
