@@ -238,3 +238,20 @@ task.lastRepeat = today;
 
 }
 
+function editTask(i){
+
+  const newText = prompt(
+    "Edit task:",
+    tasks[i].text
+  );
+
+  if(newText){
+
+    tasks[i].text = newText;
+
+    saveTasks();
+    renderTasks();
+
+  }
+}
+
