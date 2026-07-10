@@ -585,35 +585,7 @@ alert(
 
 }
   
-function processRepeatingTasks(){
 
-const today =
-new Date().toDateString();
-
-tasks.forEach(task=>{
-
-if(
-task.done &&
-task.repeat !== "none"
-){
-
-if(task.lastRepeat===today)
-return;
-
-task.done = false;
-
-task.createdAt =
-new Date().toISOString();
-
-task.lastRepeat = today;
-
-  }
-
-});
-
-saveTasks();
-
-}
   
 processRepeatingTasks();
 
