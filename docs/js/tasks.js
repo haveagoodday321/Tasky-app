@@ -255,3 +255,30 @@ function editTask(i){
   }
 }
 
+function deleteTask(i){
+
+if(confirm("Delete task?")){
+
+tasks.splice(i,1);
+
+saveTasks();
+
+renderTasks();
+
+renderCompletedTasks();
+
+updateStats();
+
+updateFocus();
+
+updatePlanner();
+
+updateTaskHistory();
+
+updateFocusScore();
+
+updateGoal();
+}
+
+}
+
