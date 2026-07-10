@@ -282,3 +282,21 @@ updateGoal();
 
 }
 
+function clearCompleted(){
+if(confirm("Delete all completed tasks?")){
+
+tasks = tasks.filter(t=>!t.done);
+
+renderTasks();
+renderCompletedTasks();
+updateStats();
+saveTasks();
+updateFocus();
+updateTaskHistory();
+updateFocusScore();
+updateGoal();
+
+}
+
+}
+
