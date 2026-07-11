@@ -1,3 +1,15 @@
+function enableNotifications(){
+
+if(
+"Notification" in window
+){
+
+Notification.requestPermission();
+
+}
+
+}
+
 function checkReminders(){
 
 tasks.forEach(task=>{
