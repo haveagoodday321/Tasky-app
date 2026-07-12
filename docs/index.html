@@ -396,7 +396,7 @@ document.body.classList.add(
 
 document.getElementById("streak").textContent = streak;
 
-function saveTasks() { localStorage.setItem("tasks", JSON.stringify(tasks)); }
+
 
 // --- Add Task ---
 
@@ -799,21 +799,7 @@ sectionNotesContainer.style.marginTop = "8px";
 sectionNotesContainer.appendChild(sectionNotesArea);
 taskCard.appendChild(sectionNotesContainer);
 
-function showSection(sec){
-  currentSection = sec;
 
-  localStorage.setItem(
-    "currentSection",
-    currentSection
-  );
-  
-  renderTasks();
-
-  sectionNotesArea.value =
-    sectionNotes[sec];
-
-  saveTasks();
-}
 
 // Save section notes
 sectionNotesArea.addEventListener("input", e=>{
