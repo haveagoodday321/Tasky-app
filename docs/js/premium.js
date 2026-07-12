@@ -26,3 +26,7 @@ alert(
 );
 
 }
+
+function isPremiumActive(){
+  return Date.now() < localStorage.getItem("premiumUntil");
+}
