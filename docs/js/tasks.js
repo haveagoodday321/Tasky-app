@@ -236,3 +236,130 @@ updateGoal();
 
 }
 
+function renderTasks(){
+
+const ul = document.getElementById("taskList");
+ul.innerHTML = "";
+const search =
+document.getElementById("searchTask")
+.value
+.toLowerCase();
+  const filteredTasks =
+tasks.filter(t =>
+t.section===currentSection &&
+t.text.toLowerCase().includes(search)
+);
+
+if(filteredTasks.length===0){
+
+ul.innerHTML =
+"<p>No matching tasks 📋</p>";
+
+return;
+
+    }
+
+tasks
+.sort((a,b)=>{
+
+const order = {
+High:3,
+Medium:2,
+Low:1
+};
+
+return order[b.priority] -
+order[a.priority];
+
+})
+.forEach((t,i)=>{
+
+if(t.section!==currentSection) return;
+
+if(
+!t.text.toLowerCase()
+.includes(search)
+) return;
+
+const li=document.createElement("li");
+
+let color=
+t.priority==="High"?"red":
+t.priority==="Medium"?"orange":
+"green";
+
+const createdDate=new Date(t.createdAt);
+const today = new Date();
+let warning="";
+if(t.deadline){
+
+const due=new Date(t.deadline);
+
+const diff=Math.ceil(
+(due-new Date())/
+(1000*60*60*24)
+);
+
+if(diff===0){
+warning="⚠️ Due today";
+}
+
+else if(diff===1){
+warning="⏳ Due tomorrow";
+}
+
+else if(diff < 0){
+warning = "❌ Overdue";
+}
+
+if(warning==="❌ Overdue"){
+li.classList.add("overdue");
+  }
+
+if(warning==="❌ Overdue"){
+li.classList.add("overdue");
+}
+
+}
+
+const today=new Date();
+
+let displayTime;
+
+if(createdDate.toDateString()===today.toDateString()){
+
+displayTime=
+createdDate.toLocaleTimeString([],{
+hour:'2-digit',
+minute:'2-digit'
+});
+
+}else{
+
+displayTime=
+createdDate.toLocaleDateString();
+
+}
+
+li.innerHTML=`
+<span class="${t.done?'done':''}">
+${t.text}
+<br>
+<small>${displayTime}</small>
+
+<small>${warning}</small>
+
+<small>
+📂 ${t.category}
+</small>
+
+<small style="color:${color}">
+(${t.priority})
+</small>
+</span>
+
+<div>
+
+<div>
+
+}
